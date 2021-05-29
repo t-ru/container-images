@@ -74,7 +74,7 @@ jobs:
         
       # Remove labels
       - name: Remove labels
-        run: buildah config --label "-"
+        run: buildah config --label - ${{ env.WORK_CONTAINER }}
     
       # Create target image
       - name: Create target image
