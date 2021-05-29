@@ -75,6 +75,11 @@ jobs:
       # Remove labels
       - name: Remove labels
         run: buildah config --label - ${{ env.WORK_CONTAINER }}
+      
+      # Add labels
+      - name: Add labels
+        run: | 
+          buildah config --label org.opencontainers.image.title="openSUSE Tumbleweed RMT Server container" ${{ env.WORK_CONTAINER }}
     
       # Create target image
       - name: Create target image
