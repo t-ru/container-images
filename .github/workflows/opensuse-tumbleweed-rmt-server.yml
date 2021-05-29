@@ -71,6 +71,10 @@ jobs:
       #     c617b9ee75ad:/ #
       - name: Install gems (bundler:1.17.3)
         run: buildah run ${{ env.WORK_CONTAINER }} gem install bundler:1.17.3
+        
+      # Remove labels
+      - name: Remove labels
+        run: buildah config --label -
     
       # Create target image
       - name: Create target image
@@ -90,7 +94,7 @@ jobs:
       - name: Show images
         run: buildah images
       
-      - name: Push To ghcr.io
+      - name: Push to ghcr.io
         id: push-to-ghcr
         uses: redhat-actions/push-to-registry@v2
         with:
