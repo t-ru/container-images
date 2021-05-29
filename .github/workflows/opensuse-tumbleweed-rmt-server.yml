@@ -74,7 +74,7 @@ jobs:
     
       # Create target image
       - name: Create target image
-        run: buildah commit --format oci --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
+        run: buildah commit --format docker --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
       
       # Show images
       - name: Show images
