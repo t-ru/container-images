@@ -8,7 +8,8 @@ on:
   #  - cron: '0 0 * * *'  # every day at midnight
 
 env:
-  BASE_IMAGE: "registry.opensuse.org/opensuse/rmt-server:latest"
+  BASE_IMAGE_NAME: "registry.opensuse.org/opensuse/rmt-server"
+  BASE_IMAGE_TAG: "latest"
   
 jobs:
 
@@ -19,8 +20,13 @@ jobs:
 
       - name: Show variables
         run: |
-          echo "Base image: ${{ env.BASE_IMAGE }}"
+          echo "Base image name: ${{ env.BASE_IMAGE_NAME }}"
+          echo "Base image tag: ${{ env.BASE_IMAGE_TAG }}"
 
       # Check out repository
       - uses: actions/checkout@v2
+      
+      # Pull base image
+      - name: Pull base image
+        run: buildah pull ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
         
