@@ -74,7 +74,7 @@ jobs:
         
       # Remove labels
       - name: Remove labels
-        run: buildah config --label -
+        run: buildah config --label "-"
     
       # Create target image
       - name: Create target image
