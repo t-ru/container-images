@@ -11,6 +11,7 @@ env:
   BASE_IMAGE_NAME: "registry.opensuse.org/opensuse/rmt-server"
   BASE_IMAGE_TAG: "latest"
   TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server"
+  WORK_CONTAINER: "work-container"
   
 jobs:
 
@@ -31,4 +32,21 @@ jobs:
       # Pull base image
       - name: Pull base image
         run: buildah pull ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
+      
+      # Show images
+      - name: Show images
+        run: buildah images
+        
+      # Create work container
+      - name: Show images
+        run: buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
+        
+      # Show containers
+      - name: Show containers
+        run: buildah containers
+      
+
+
+        
+      
         
