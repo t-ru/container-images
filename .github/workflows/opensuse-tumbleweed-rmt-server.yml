@@ -7,6 +7,9 @@ on:
   #schedule:
   #  - cron: '0 0 * * *'  # every day at midnight
 
+env:
+  BASE_IMAGE: "registry.opensuse.org/opensuse/rmt-server:latest"
+  
 jobs:
 
   build:
@@ -14,8 +17,9 @@ jobs:
 
     steps:
 
-      - name: Workflow name
-        run: echo "${{ github.workflow }}"
+      - name: Show variables
+        run: |
+          echo "Base image: ${{ env.BASE_IMAGE }}"
 
       # Check out repository
       - uses: actions/checkout@v2
