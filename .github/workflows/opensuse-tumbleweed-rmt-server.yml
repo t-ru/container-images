@@ -89,6 +89,18 @@ jobs:
       # Show images
       - name: Show images
         run: buildah images
+      
+      - name: Push To ghcr.io
+        id: push-to-ghcr
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ env.TARGET_IMAGE_NAME }}
+          tags: latest ${{ github.run_number }} ${{ github.sha }}
+          registry: ghcr.io/${{ github.repository_owner }}/container-images
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+          #registry: ghcr.io/${{ github.repository_owner }}/container-images
+          
     
       
       
