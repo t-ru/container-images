@@ -144,7 +144,7 @@ jobs:
       # Setup entrypoint
       - name: Setup entrypoint
         #run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }}
-        run: buildah config --entrypoint '["/usr/share/logstash/config/logstash-entrypoint.sh","--path.settings /etc/logstash/","-f /usr/share/logstash/pipeline/"]' ${{ env.WORK_CONTAINER }}
+        run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
       
       # Add labels
       - name: Add labels
