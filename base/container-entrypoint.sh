@@ -8,12 +8,21 @@ trap "{ exit 0; }" TERM INT
 ls -ltr /container-entrypoint.d
 whoami
 
-chown root:root /container-entrypoint.d
-#chown root:root /container-entrypoint.d/*.env 2>/dev/null
-#chown root:root /container-entrypoint.d/*.sh 2>/dev/null
-chmod 755 /container-entrypoint.d
-#chmod 644 /container-entrypoint.d/*.env 2>/dev/null
-#chmod 744 /container-entrypoint.d/*.sh 2>/dev/null
+if [ -d "/container-entrypoint.d" ]; then
+    chown root:root /container-entrypoint.d
+    chmod 755 /container-entrypoint.d
+    for _container_entrypoint in /container-entrypoint.d/*; do
+        _extension="${_container_entrypoint##*.}"
+        if [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "env" ]; then
+            chown root:root ${_container_entrypoint}
+            chmod 644 ${_container_entrypoint}
+        elif [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "sh" ]; then
+            chown root:root ${_container_entrypoint}
+            chmod 744 ${_container_entrypoint}
+        fi
+    done
+fi
+
 
 
 
