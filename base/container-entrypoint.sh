@@ -3,7 +3,7 @@
 set -e
 
 # Handle a kill signal before the final "exec" command runs
-#trap "{ exit 0; }" TERM INT
+trap "{ exit 0; }" TERM INT
 
 # Process files in /container-entrypoint.d
 for _file in /container-entrypoint.d/*; do
