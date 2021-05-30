@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "10-mariadb.sh"
+echo "hello from 10-mariadb.sh"
 
