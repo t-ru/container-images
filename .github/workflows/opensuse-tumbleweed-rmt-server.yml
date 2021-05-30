@@ -45,8 +45,8 @@ jobs:
       - name: Show containers
         run: buildah containers
       
-      # Refresh Repositories
-      - name: Refresh Repositories
+      # Refresh repositories
+      - name: Refresh repositories
         run: buildah run ${{ env.WORK_CONTAINER }} zypper refresh
       
       # Install updates
@@ -54,26 +54,26 @@ jobs:
       - name: Install updates
         run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
 
-      # Install Packages (hostname)
+      # Install packages (hostname)
       #   prevent installation of busybox and busybox-hostname
-      - name: Install Packages (hostname)
+      - name: Install packages (hostname)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
 
-      # Install Packages (util-linux)
+      # Install packages (util-linux)
       #   prevent installation of busybox and busybox-util-linux
-      - name: Install Packages (util-linux)
+      - name: Install packages (util-linux)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
       
-      # Install Packages (mariadb)
-      - name: Install Packages (mariadb)
+      # Install packages (mariadb)
+      - name: Install packages (mariadb)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
 
-      # Install Packages (nginx)
-      - name: Install Packages (nginx)
+      # Install packages (nginx)
+      - name: Install packages (nginx)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends nginx
       
-      # Install Packages (ruby2.7)
-      - name: Install Packages (ruby2.7)
+      # Install packages (ruby2.7)
+      - name: Install packages (ruby2.7)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
 
       # Install gems bundler:1.17.3)
@@ -96,8 +96,8 @@ jobs:
       - name: Install gems (bundler:1.17.3)
         run: buildah run ${{ env.WORK_CONTAINER }} gem install bundler:1.17.3
       
-      # Install Packages (rmt-server)
-      - name: Install Packages (rmt-server)
+      # Install packages (rmt-server)
+      - name: Install packages (rmt-server)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends rmt-server
       
 
@@ -107,7 +107,7 @@ jobs:
       #   catatonit
 
 
-      
+
         
       # Remove labels
       - name: Remove labels
