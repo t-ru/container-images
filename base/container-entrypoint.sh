@@ -5,6 +5,14 @@ set -e
 # Handle a kill signal before the final "exec" command runs
 trap "{ exit 0; }" TERM INT
 
+
+chown root:root /container-entrypoint.d/*.env 2>/dev/null
+chown root:root /container-entrypoint.d/*.sh 2>/dev/null
+chmod 644 /container-entrypoint.d/*.env 2>/dev/null
+chmod 744 /container-entrypoint.d/*.sh 2>/dev/null
+
+
+
 # Process files in /container-entrypoint.d
 for _file in /container-entrypoint.d/*; do
     _file_extension="${_file##*.}"
