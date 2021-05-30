@@ -110,7 +110,7 @@ jobs:
       - name: Create /container-entrypoint.d
         run: |
           buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
-          buildah copy ${{ env.WORK_CONTAINER }} $GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*" "/container-entrypoint.d
+          buildah copy ${{ env.WORK_CONTAINER }} $GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*" "/container-entrypoint.d"
           
         #buildah run ${{ env.WORK_CONTAINER }} "chmod 744 /container-entrypoint.d/*.sh 2>/dev/null"
         #buildah run ${{ env.WORK_CONTAINER }} "chmod 644 /container-entrypoint.d/*.env 2>/dev/null"
