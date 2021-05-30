@@ -25,6 +25,10 @@ jobs:
           echo "Base image name: ${{ env.BASE_IMAGE_NAME }}"
           echo "Base image tag: ${{ env.BASE_IMAGE_TAG }}"
           echo "Target image name: ${{ env.TARGET_IMAGE_NAME }}"
+      
+      # xxx
+      - name: XXX
+        run: ls -ltr $GITHUB_WORKSPACE
 
       # Check out repository
       - uses: actions/checkout@v2
