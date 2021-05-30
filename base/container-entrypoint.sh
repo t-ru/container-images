@@ -5,8 +5,6 @@ set -e
 # Handle a kill signal before the final "exec" command runs
 #trap "{ exit 0; }" TERM INT
 
-echo "number of args: $#"
-
 # Process files in /container-entrypoint.d
 #for _file in /container-entrypoint.d/*; do
 #    
@@ -28,15 +26,14 @@ echo "number of args: $#"
 
 #done
 
-#if [ $# = 0 ]; then
-#  if [ -x /bin/bash ]; then
-#    set -- /bin/bash
-#  else
-#    set -- /bin/sh
-#  fi
-#fi
-
+# no command passed ... run a shell
+if [ $# = 0 ]; then
+  if [ -x /bin/bash ]; then
+    set -- /bin/bash
+  else
+    set -- /bin/sh
+  fi
+fi
 
 echo "Executing: $@"
 exec "$@"
-
