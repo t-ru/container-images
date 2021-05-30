@@ -16,7 +16,7 @@ if [ -d "/container-entrypoint.d" ]; then
             chmod 644 ${_container_entrypoint}
         elif [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "sh" ]; then
             chown root:root ${_container_entrypoint}
-            chmod 744 ${_container_entrypoint}
+            chmod 755 ${_container_entrypoint}
         fi
     done
 fi
