@@ -23,20 +23,34 @@ fi
 
 
 
-
 # Process files in /container-entrypoint.d
-for _file in /container-entrypoint.d/*; do
-    _file_extension="${_file##*.}"
-    if [ "${_file_extension}" = "env" ] && [ -f "${_file}" ]; then
-        # source env files
-        echo "Sourcing: ${_file} $@"
-        set -a && . "${_file}" "$@" && set +a
-    elif [ "${_file_extension}" = "sh" ] && [ -x "${_file}" ]; then
-        # run script files
-        echo "Executing: ${_file} $@"
-        "${_file}" "$@"
-    fi
-done
+if [ -d "/container-entrypoint.d" ]; then
+    for _container_entrypoint in /container-entrypoint.d/*; do
+        _extension="${_container_entrypoint##*.}"
+        if [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "env" ]; then
+            # source env files
+            echo "Sourcing: ${_container_entrypoint} $@"
+            set -a && . "${_container_entrypoint}" "$@" && set +a
+        elif [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "sh" ] && [ -x "${_container_entrypoint}" ]; then
+            # run script files
+            echo "Executing: ${_container_entrypoint} $@"
+            "${_container_entrypoint}" "$@"
+        fi
+    done
+fi
+
+#for _file in /container-entrypoint.d/*; do
+#    _file_extension="${_file##*.}"
+#    if [ "${_file_extension}" = "env" ] && [ -f "${_file}" ]; then
+#        # source env files
+#        echo "Sourcing: ${_file} $@"
+#        set -a && . "${_file}" "$@" && set +a
+#    elif [ "${_file_extension}" = "sh" ] && [ -x "${_file}" ]; then
+#        # run script files
+#        echo "Executing: ${_file} $@"
+#        "${_file}" "$@"
+#    fi
+#done
 
 # no command passed ... run a shell
 if [ $# = 0 ]; then
