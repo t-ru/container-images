@@ -131,7 +131,7 @@ jobs:
         run: |
           buildah config --cmd "[]" ${{ env.WORK_CONTAINER }}
           buildah config --entrypoint "[]" ${{ env.WORK_CONTAINER }}
-          #buildah config --env "[]" ${{ env.WORK_CONTAINER }}
+          buildah config "[]" ${{ env.WORK_CONTAINER }}
           #buildah config --port "[]" ${{ env.WORK_CONTAINER }}
           #buildah config --volume "[]" ${{ env.WORK_CONTAINER }}
           #buildah config --label "[]" ${{ env.WORK_CONTAINER }}
