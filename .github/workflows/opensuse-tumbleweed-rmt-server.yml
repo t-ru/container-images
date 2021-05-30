@@ -106,13 +106,13 @@ jobs:
       #   pwgen
       #   catatonit
 
-      # Create /etc/container-entrypoint.d
-      - name: Create /etc/container-entrypoint.d
-        run: buildah run ${{ env.WORK_CONTAINER }} mkdir /etc/container-entrypoint.d
+      # Create /container-entrypoint.d
+      - name: Create /container-entrypoint.d
+        run: buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
 
-      # Create /bin/container-entrypoint.sh
-      - name: Create /bin/container-entrypoint.sh
-        run: buildah copy ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/base/bin/container-entrypoint.sh" "/bin/container-entrypoint.sh"
+      # Create /container-entrypoint.sh
+      - name: Create /container-entrypoint.sh
+        run: buildah copy ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/base/container-entrypoint.sh" "/container-entrypoint.sh"
         
       
       
