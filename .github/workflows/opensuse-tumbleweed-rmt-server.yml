@@ -106,6 +106,14 @@ jobs:
       #   pwgen
       #   catatonit
 
+      # Create /etc/container-entrypoint.d
+      - name: Create /etc/container-entrypoint.d
+        run: buildah run mkdir /etc/container-entrypoint.d
+
+      
+
+
+
 
 
         
