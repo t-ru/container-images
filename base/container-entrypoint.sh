@@ -6,10 +6,10 @@ set -e
 trap "{ exit 0; }" TERM INT
 
 
-chown root:root /container-entrypoint.d
+#chown root:root /container-entrypoint.d
 chown root:root /container-entrypoint.d/*.env 2>/dev/null
 chown root:root /container-entrypoint.d/*.sh 2>/dev/null
-chmod 755 /container-entrypoint.d
+#chmod 755 /container-entrypoint.d
 chmod 644 /container-entrypoint.d/*.env 2>/dev/null
 chmod 744 /container-entrypoint.d/*.sh 2>/dev/null
 
