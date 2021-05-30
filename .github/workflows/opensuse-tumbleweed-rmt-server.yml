@@ -8,9 +8,9 @@ on:
   #  - cron: '0 0 * * *'  # every day at midnight
 
 env:
-  BASE_IMAGE_NAME: "registry.opensuse.org/opensuse/rmt-server"
+  BASE_IMAGE_NAME: "registry.opensuse.org/opensuse/tumbleweed"
   BASE_IMAGE_TAG: "latest"
-  TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server"
+  TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server-testing"
   WORK_CONTAINER: "work-container"
   
 jobs:
