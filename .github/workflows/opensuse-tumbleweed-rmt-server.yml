@@ -108,11 +108,12 @@ jobs:
 
       # Create /container-entrypoint.d
       - name: Create /container-entrypoint.d
-        run: buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
+        #run: buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
+        run: buildah copy ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d" "/"
 
       # Create /container-entrypoint.sh
       - name: Create /container-entrypoint.sh
-        run: buildah copy ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/base/container-entrypoint.sh" "/container-entrypoint.sh"
+        run: buildah copy ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/base/container-entrypoint.sh" "/"
         
       
       
