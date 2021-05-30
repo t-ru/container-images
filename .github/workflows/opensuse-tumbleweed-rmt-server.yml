@@ -75,6 +75,11 @@ jobs:
       - name: Install packages (util-linux)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
       
+      # Install packages (timezone)
+      #   mariadb requires timezone... but dependency is not set on package mariadb
+      - name: Install packages (timezone)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
+      
       # Install packages (mariadb)
       - name: Install packages (mariadb)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
