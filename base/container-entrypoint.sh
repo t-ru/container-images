@@ -32,5 +32,5 @@ echo "number of args: $#"
 
 
 echo "Executing: $@"
-exec /bin/bash
+exec "$@"
 
