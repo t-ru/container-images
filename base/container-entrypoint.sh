@@ -6,6 +6,7 @@ set -e
 trap "{ exit 0; }" TERM INT
 
 ls -ltr /container-entrypoint.d
+whoami
 
 #chown root:root /container-entrypoint.d
 #chown root:root /container-entrypoint.d/*.env 2>/dev/null
