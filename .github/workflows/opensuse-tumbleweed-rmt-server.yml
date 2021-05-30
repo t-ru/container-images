@@ -111,6 +111,11 @@ jobs:
         run: buildah run mkdir /etc/container-entrypoint.d
 
       
+      # xxx
+      - name: XXX
+        run: echo $GITHUB_WORKSPACE
+      
+      
 
 
 
