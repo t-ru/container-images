@@ -43,7 +43,16 @@ jobs:
         
       # Show containers
       - name: Show containers
-        run: buildah containers       
+        run: buildah containers
+        
+      # Remove config
+      - name: Remove config
+        run: |
+          buildah config --cmd "[]" ${{ env.WORK_CONTAINER }}
+          buildah config --entrypoint "[]" ${{ env.WORK_CONTAINER }}
+          buildah config --env "[]" ${{ env.WORK_CONTAINER }}
+          buildah config --label - ${{ env.WORK_CONTAINER }}
+          
       
       # Refresh repositories
       #- name: Refresh repositories
@@ -126,14 +135,7 @@ jobs:
         run: buildah copy --chmod 744 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/base/container-entrypoint.sh" "/"
 
     
-      # Remove config
-      - name: Remove config
-        run: |
-          buildah config --cmd "[]" ${{ env.WORK_CONTAINER }}
-          buildah config --entrypoint "[]" ${{ env.WORK_CONTAINER }}
-          buildah config --label - ${{ env.WORK_CONTAINER }}
-          #buildah config --port "[]" ${{ env.WORK_CONTAINER }}
-          #buildah config --volume "[]" ${{ env.WORK_CONTAINER }}
+
           
      
         
