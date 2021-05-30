@@ -108,7 +108,7 @@ jobs:
 
       # Create /etc/container-entrypoint.d
       - name: Create /etc/container-entrypoint.d
-        run: buildah run mkdir /etc/container-entrypoint.d
+        run: buildah run ${{ env.WORK_CONTAINER }} mkdir /etc/container-entrypoint.d
 
       
       # xxx
