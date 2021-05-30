@@ -113,7 +113,7 @@ jobs:
       
       # xxx
       - name: XXX
-        run: echo $GITHUB_WORKSPACE
+        run: ls -ltr $GITHUB_WORKSPACE
       
       
 
