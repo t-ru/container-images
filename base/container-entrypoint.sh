@@ -5,8 +5,6 @@ set -e
 # Handle a kill signal before the final "exec" command runs
 trap "{ exit 0; }" TERM INT
 
-ls -ltr /container-entrypoint.d
-whoami
 
 if [ -d "/container-entrypoint.d" ]; then
     chown root:root /container-entrypoint.d
