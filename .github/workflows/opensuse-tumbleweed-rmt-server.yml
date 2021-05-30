@@ -78,6 +78,10 @@ jobs:
       # Install packages (mariadb)
       - name: Install packages (mariadb)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
+      
+      # Install packages (mariadb-tools)
+      - name: Install packages (mariadb-tools)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb-tools      
 
       # Install packages (nginx)
       - name: Install packages (nginx)
