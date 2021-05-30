@@ -127,7 +127,7 @@ jobs:
 
       # Setup entrypoint
       - name: Setup entrypoint
-        run: buildah config --entrypoint /container-entrypoint.sh ${{ env.WORK_CONTAINER }}
+        run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }}
         
       # Remove labels
       - name: Remove labels
