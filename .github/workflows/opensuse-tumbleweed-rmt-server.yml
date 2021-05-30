@@ -125,17 +125,9 @@ jobs:
       - name: Create /container-entrypoint.sh
         run: buildah copy --chmod 744 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/base/container-entrypoint.sh" "/"
 
-
-
-
-
-      
-      
-
-
-
-
-
+      # Setup entrypoint
+      - name: Setup entrypoint
+        run: buildah config --entrypoint /container-entrypoint.sh ${{ env.WORK_CONTAINER }}
         
       # Remove labels
       - name: Remove labels
