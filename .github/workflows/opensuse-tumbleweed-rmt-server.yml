@@ -46,35 +46,35 @@ jobs:
         run: buildah containers       
       
       # Refresh repositories
-      - name: Refresh repositories
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper refresh
+      #- name: Refresh repositories
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper refresh
       
       # Install updates
       #   tumbleweed: "zypper dup" not "zypper up"
-      - name: Install updates
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
+      #- name: Install updates
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
 
       # Install packages (hostname)
       #   prevent installation of busybox and busybox-hostname
-      - name: Install packages (hostname)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
+      #- name: Install packages (hostname)
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
 
       # Install packages (util-linux)
       #   prevent installation of busybox and busybox-util-linux
-      - name: Install packages (util-linux)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
+      #- name: Install packages (util-linux)
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
       
       # Install packages (mariadb)
-      - name: Install packages (mariadb)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
+      #- name: Install packages (mariadb)
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
 
       # Install packages (nginx)
-      - name: Install packages (nginx)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends nginx
+      #- name: Install packages (nginx)
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends nginx
       
       # Install packages (ruby2.7)
-      - name: Install packages (ruby2.7)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
+      #- name: Install packages (ruby2.7)
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
 
       # Install gems bundler:1.17.3)
       #   rmt-server requires bundler:1.17.3
@@ -97,8 +97,8 @@ jobs:
         run: buildah run ${{ env.WORK_CONTAINER }} gem install bundler:1.17.3
       
       # Install packages (rmt-server)
-      - name: Install packages (rmt-server)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends rmt-server
+      #- name: Install packages (rmt-server)
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends rmt-server
       
 
       # ???
@@ -107,18 +107,18 @@ jobs:
       #   catatonit
       
       # Create /container-entrypoint.d
-      - name: Create /container-entrypoint.d
-        run: |
-      
-          buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
-          
-          if [ $( ls $GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
-            buildah copy --chmod 744 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
-          fi
-          
-          if [ $( ls $GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
-            buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
-          fi
+      #- name: Create /container-entrypoint.d
+      #  run: |
+      #
+      #    buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
+      #    
+      #    if [ $( ls $GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
+      #      buildah copy --chmod 744 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
+      #    fi
+      #    
+      #    if [ $( ls $GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
+      #      buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/$GITHUB_WORKFLOW/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
+      #    fi
       
       
       # Create /container-entrypoint.sh
