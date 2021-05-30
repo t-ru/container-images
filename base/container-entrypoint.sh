@@ -28,13 +28,13 @@ echo "number of args: $#"
 
 #done
 
-if [ $# = 0 ]; then
-  if [ -x /bin/bash ]; then
-    set -- /bin/bash
-  else
-    set -- /bin/sh
-  fi
-fi
+#if [ $# = 0 ]; then
+#  if [ -x /bin/bash ]; then
+#    set -- /bin/bash
+#  else
+#    set -- /bin/sh
+#  fi
+#fi
 
 
 echo "Executing: $@"
