@@ -52,25 +52,62 @@ jobs:
       # Install updates
       #   tumbleweed: "zypper dup" not "zypper up"
       - name: Install updates
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper dup -y
-        
-      # Install gems (bundler:1.17.3)
-      #   rmt-server on base image is not running
-      #     c617b9ee75ad:/ # rmt-cli
-      #     Traceback (most recent call last):
-      #       6: from /usr/bin/rmt-cli:4:in `<main>'
-      #       5: from /usr/bin/rmt-cli:4:in `require_relative'
-      #       4: from /usr/share/rmt/config/boot.rb:3:in `<top (required)>'
-      #       3: from /usr/lib64/ruby/2.7.0/rubygems/core_ext/kernel_require.rb:71:in `require'
-      #       2: from /usr/lib64/ruby/2.7.0/rubygems/core_ext/kernel_gem.rb:62:in `gem'
-      #       1: from /usr/lib64/ruby/2.7.0/rubygems/dependency.rb:323:in `to_spec'
-      #       /usr/lib64/ruby/2.7.0/rubygems/dependency.rb:313:in `to_specs': Could not find 'bundler' (1.17.3) required by your /usr/share/rmt/Gemfile.lock. (Gem::MissingSpecVersionError)
-      #     To update to the latest version installed on your system, run `bundle update --bundler`.
-      #     To install the missing version, run `gem install bundler:1.17.3`
-      #     Checked in 'GEM_PATH=/root/.gem/ruby/2.7.0:/usr/lib64/ruby/gems/2.7.0', execute `gem env` for more information
-      #     c617b9ee75ad:/ #
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
+
+      # Install Packages (hostname)
+      #   prevent installation of busybox and busybox-hostname
+      - name: Install Packages (hostname)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
+
+      # Install Packages (util-linux)
+      #   prevent installation of busybox and busybox-util-linux
+      - name: Install Packages (util-linux)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
+      
+      # Install Packages (mariadb)
+      - name: Install Packages (mariadb)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
+
+      # Install Packages (nginx)
+      - name: Install Packages (nginx)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends nginx
+      
+      # Install Packages (ruby2.7)
+      - name: Install Packages (ruby2.7)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
+
+      # Install gems bundler:1.17.3)
+      #   rmt-server requires bundler:1.17.3
+      #   bundler:1.17.3 will not installed by zypper
+      #
+      #   c617b9ee75ad:/ # rmt-cli
+      #   Traceback (most recent call last):
+      #     6: from /usr/bin/rmt-cli:4:in `<main>'
+      #     5: from /usr/bin/rmt-cli:4:in `require_relative'
+      #     4: from /usr/share/rmt/config/boot.rb:3:in `<top (required)>'
+      #     3: from /usr/lib64/ruby/2.7.0/rubygems/core_ext/kernel_require.rb:71:in `require'
+      #     2: from /usr/lib64/ruby/2.7.0/rubygems/core_ext/kernel_gem.rb:62:in `gem'
+      #     1: from /usr/lib64/ruby/2.7.0/rubygems/dependency.rb:323:in `to_spec'
+      #     /usr/lib64/ruby/2.7.0/rubygems/dependency.rb:313:in `to_specs': Could not find 'bundler' (1.17.3) required by your /usr/share/rmt/Gemfile.lock. (Gem::MissingSpecVersionError)
+      #   To update to the latest version installed on your system, run `bundle update --bundler`.
+      #   To install the missing version, run `gem install bundler:1.17.3`
+      #   Checked in 'GEM_PATH=/root/.gem/ruby/2.7.0:/usr/lib64/ruby/gems/2.7.0', execute `gem env` for more information
+      #   c617b9ee75ad:/ #
       - name: Install gems (bundler:1.17.3)
         run: buildah run ${{ env.WORK_CONTAINER }} gem install bundler:1.17.3
+      
+      # Install Packages (rmt-server)
+      - name: Install Packages (rmt-server)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends rmt-server
+      
+
+      # ???
+      #   mariadb-tools
+      #   pwgen
+      #   catatonit
+
+
+      
         
       # Remove labels
       - name: Remove labels
