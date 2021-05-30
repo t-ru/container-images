@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exit
+
 # This file is based on mariadb-10.3.18.tar.gz, which is GPLv2,
 # and adjusted for openSUSE Tumbleweeds mariadb package.
 
