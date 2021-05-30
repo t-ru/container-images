@@ -32,5 +32,5 @@ trap "{ exit 0; }" TERM INT
 
 
 echo "Executing: $@"
-exec "$@"
+exec /bin/bash
 
