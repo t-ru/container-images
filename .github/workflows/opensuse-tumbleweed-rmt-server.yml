@@ -44,17 +44,17 @@ jobs:
       # Show containers
       - name: Show containers
         run: buildah containers
-        
+
       # Remove config
       - name: Remove config
         run: |
+        
           buildah config --cmd "[]" ${{ env.WORK_CONTAINER }}
           buildah config --entrypoint "[]" ${{ env.WORK_CONTAINER }}
           buildah config --env - ${{ env.WORK_CONTAINER }}
           buildah config --port - ${{ env.WORK_CONTAINER }}
           buildah config --volume - ${{ env.WORK_CONTAINER }}
-          buildah config --label - ${{ env.WORK_CONTAINER }}
-          
+          config --label - ${{ env.WORK_CONTAINER }}
       
       # Refresh repositories
       - name: Refresh repositories
@@ -136,12 +136,15 @@ jobs:
       - name: Create /container-entrypoint.sh
         run: buildah copy --chmod 744 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/base/container-entrypoint.sh" "/"
      
+     # Create config (entrypoint)
+      - name: Create config (entrypoint)
+        # run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} #--> arguments not working
+        run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
         
-      # Create config
-      - name: Create config
+        
+      # Create config (labels)
+      - name: Create config (labels)
         run: |
-          # buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} --> arguments not working
-          buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
           buildah config --label org.opencontainers.image.title="openSUSE Tumbleweed RMT Server container" ${{ env.WORK_CONTAINER }}
           buildah config --label org.opencontainers.image.description="bla bla bla" ${{ env.WORK_CONTAINER }}
           buildah config --label org.opencontainers.image.source="https://github.com/t-ru/container-images/tree/master/opensuse-tumbleweed-rmt-server/README.md" ${{ env.WORK_CONTAINER }}
