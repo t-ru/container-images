@@ -118,7 +118,11 @@ jobs:
       # Install packages (catatonit)
       #- name: Install packages (catatonit)
       #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends catatonit
-           
+     
+      # Install packages (gzip)
+      - name: Install packages (gzip)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends gzip
+      
       # Install packages (systemd)
       - name: Install packages (systemd)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends systemd
@@ -129,66 +133,66 @@ jobs:
       #   pwgen
       
       # Create /container-entrypoint.d
-      - name: Create /container-entrypoint.d
-        run: |
+      #- name: Create /container-entrypoint.d
+      #  run: |
       
-          buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
+      #    buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
           
-          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
-            buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
-          fi
+      #    if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
+      #      buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
+      #    fi
           
-          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
-            buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
-          fi
+      #    if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
+      #      buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
+      #    fi
       
       
       # Create /container-entrypoint.sh
-      - name: Create /container-entrypoint.sh
-        run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
+      #- name: Create /container-entrypoint.sh
+      #  run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
      
      # Create config (entrypoint)
-      - name: Create config (entrypoint)
+      #- name: Create config (entrypoint)
         # run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} #--> arguments not working
-        run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
+      #  run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
         
         
       # Create config (labels)
-      - name: Create config (labels)
-        run: |
-          buildah config --label org.opencontainers.image.title="openSUSE Tumbleweed RMT Server container" ${{ env.WORK_CONTAINER }}
-          buildah config --label org.opencontainers.image.description="bla bla bla" ${{ env.WORK_CONTAINER }}
-          buildah config --label org.opencontainers.image.source="https://github.com/t-ru/container-images/tree/master/README.md" ${{ env.WORK_CONTAINER }}
+      #- name: Create config (labels)
+      #  run: |
+      #    buildah config --label org.opencontainers.image.title="openSUSE Tumbleweed RMT Server container" ${{ env.WORK_CONTAINER }}
+      #    buildah config --label org.opencontainers.image.description="bla bla bla" ${{ env.WORK_CONTAINER }}
+      #    buildah config --label org.opencontainers.image.source="https://github.com/t-ru/container-images/tree/master/README.md" ${{ env.WORK_CONTAINER }}
     
     
       # Create target image
-      - name: Create target image
-        run: buildah commit --format docker --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
+      #- name: Create target image
+      #  run: buildah commit --format docker --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
       
       # Show images
-      - name: Show images
-        run: buildah images
+      #- name: Show images
+      #  run: buildah images
         
       # Create additional tags
-      - name: Create additional tags
-        run: |
-          buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.run_number }}  
-          buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:latest
+      #- name: Create additional tags
+      #  run: |
+      #    buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.run_number }}  
+      #    buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:latest
       
       # Show images
-      - name: Show images
-        run: buildah images
+      #- name: Show images
+      #  run: buildah images
       
-      - name: Push to ghcr.io
-        id: push-to-ghcr
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ env.TARGET_IMAGE_NAME }}
-          tags: latest ${{ github.run_number }} ${{ github.sha }}
-          registry: ghcr.io/${{ github.repository_owner }}/container-images
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
-          #registry: ghcr.io/${{ github.repository_owner }}/container-images
+      #- name: Push to ghcr.io
+      #  id: push-to-ghcr
+      #  uses: redhat-actions/push-to-registry@v2
+      #  with:
+      #    image: ${{ env.TARGET_IMAGE_NAME }}
+      #    tags: latest ${{ github.run_number }} ${{ github.sha }}
+      #    registry: ghcr.io/${{ github.repository_owner }}/container-images
+      #    username: ${{ secrets.GHCR_USERNAME }}
+      #    password: ${{ secrets.GHCR_TOKEN }}
+      #    #registry: ghcr.io/${{ github.repository_owner }}/container-images
           
     
       
