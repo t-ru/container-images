@@ -85,8 +85,8 @@ jobs:
         #run: buildah run ${{ env.WORK_CONTAINER }} cd /usr && ln -s ../lib/systemd/systemd /usr/sbin/init && cd /
         
       # Create config (cmd)
-      - name: Create config (cmd)
-        run: buildah config --cmd "/usr/sbin/init" ${{ env.WORK_CONTAINER }}
+      #- name: Create config (cmd)
+      #  run: buildah config --cmd "/usr/sbin/init" ${{ env.WORK_CONTAINER }}
      
       # Create /container-entrypoint.d
       - name: Create /container-entrypoint.d
@@ -107,9 +107,9 @@ jobs:
         run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
      
       # Create config (entrypoint)
-      #- name: Create config (entrypoint)
+      - name: Create config (entrypoint)
       #  # run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} #--> arguments not working
-      #  run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
+        run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
         
      
      
