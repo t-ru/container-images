@@ -70,5 +70,5 @@ if [ $# = 0 ]; then
     fi
 fi
 
-#echo "Executing: $@"
-#exec "$@"
+echo "Executing: $@"
+exec "$@"
