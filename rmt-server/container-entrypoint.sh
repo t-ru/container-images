@@ -2,6 +2,8 @@
 
 set -e
 
+/usr/sbin/init
+
 # Handle a kill signal before the final "exec" command runs
 trap "{ exit 0; }" TERM INT
 
