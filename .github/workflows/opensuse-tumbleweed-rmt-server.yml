@@ -64,7 +64,11 @@ jobs:
       #   tumbleweed: "zypper dup" not "zypper up"
       - name: Install updates
         run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
-        
+       
+       
+       
+       
+       
       
       # Install packages (gzip)
       #   prevent installation of busybox and busybox-gzip
@@ -83,6 +87,33 @@ jobs:
       # Create config (cmd)
       - name: Create config (cmd)
         run: buildah config --cmd "/usr/sbin/init" ${{ env.WORK_CONTAINER }}
+     
+      # Create /container-entrypoint.d
+      - name: Create /container-entrypoint.d
+        run: |
+      
+          buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
+          
+          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
+            buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
+          fi
+          
+          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
+            buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
+          fi
+           
+      # Create /container-entrypoint.sh
+      - name: Create /container-entrypoint.sh
+        run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
+     
+      # Create config (entrypoint)
+      - name: Create config (entrypoint)
+        # run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} #--> arguments not working
+        run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
+        
+     
+     
+     
      
         
       # Install packages (hostname)
@@ -146,30 +177,7 @@ jobs:
       # ???
       #   pwgen
       
-      # Create /container-entrypoint.d
-      - name: Create /container-entrypoint.d
-        run: |
       
-          buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
-          
-          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
-            buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
-          fi
-          
-          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
-            buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
-          fi
-      
-      
-      # Create /container-entrypoint.sh
-      - name: Create /container-entrypoint.sh
-        run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
-     
-     # Create config (entrypoint)
-     # - name: Create config (entrypoint)
-        # run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} #--> arguments not working
-     #   run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
-        
         
       # Create config (labels)
       - name: Create config (labels)
