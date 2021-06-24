@@ -1,2 +1,0 @@
-# openSUSE Tumbleweed RMT Server
-
