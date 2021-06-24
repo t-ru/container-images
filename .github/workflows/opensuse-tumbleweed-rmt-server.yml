@@ -64,32 +64,43 @@ jobs:
       #   tumbleweed: "zypper dup" not "zypper up"
       - name: Install updates
         run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
+        
+      
+      # Install packages (gzip)
+      #   prevent installation of busybox and busybox-gzip
+      - name: Install packages (gzip)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends gzip
+      
+      # Install packages (systemd)
+      - name: Install packages (systemd)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends systemd
+        
 
       # Install packages (hostname)
       #   prevent installation of busybox and busybox-hostname
-      #- name: Install packages (hostname)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
+      - name: Install packages (hostname)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
 
       # Install packages (util-linux)
       #   prevent installation of busybox and busybox-util-linux
-      #- name: Install packages (util-linux)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
+      - name: Install packages (util-linux)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
       
       # Install packages (mariadb)
-      #- name: Install packages (mariadb)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
+      - name: Install packages (mariadb)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb
       
       # Install packages (mariadb-tools)
-      #- name: Install packages (mariadb-tools)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb-tools      
+      - name: Install packages (mariadb-tools)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends mariadb-tools      
 
       # Install packages (nginx)
-      #- name: Install packages (nginx)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends nginx
+      - name: Install packages (nginx)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends nginx
       
       # Install packages (ruby2.7)
-      #- name: Install packages (ruby2.7)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
+      - name: Install packages (ruby2.7)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
 
       # Install gems bundler:1.17.3)
       #   rmt-server requires bundler:1.17.3
@@ -108,24 +119,18 @@ jobs:
       #   To install the missing version, run `gem install bundler:1.17.3`
       #   Checked in 'GEM_PATH=/root/.gem/ruby/2.7.0:/usr/lib64/ruby/gems/2.7.0', execute `gem env` for more information
       #   c617b9ee75ad:/ #
-      #- name: Install gems (bundler:1.17.3)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} gem install bundler:1.17.3
+      - name: Install gems (bundler:1.17.3)
+        run: buildah run ${{ env.WORK_CONTAINER }} gem install bundler:1.17.3
       
       # Install packages (rmt-server)
-      #- name: Install packages (rmt-server)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends rmt-server
+      - name: Install packages (rmt-server)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends rmt-server
         
       # Install packages (catatonit)
       #- name: Install packages (catatonit)
       #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends catatonit
      
-      # Install packages (gzip)
-      - name: Install packages (gzip)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends gzip
       
-      # Install packages (systemd)
-      - name: Install packages (systemd)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends systemd
         
       
 
@@ -133,65 +138,65 @@ jobs:
       #   pwgen
       
       # Create /container-entrypoint.d
-      #- name: Create /container-entrypoint.d
-      #  run: |
+      - name: Create /container-entrypoint.d
+        run: |
       
-      #    buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
+          buildah run ${{ env.WORK_CONTAINER }} mkdir /container-entrypoint.d
           
-      #    if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
-      #      buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
-      #    fi
+          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh 2>/dev/null | wc -l ) -gt 0 ]; then
+            buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.sh" "/container-entrypoint.d" 2>/dev/null
+          fi
           
-      #    if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
-      #      buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
-      #    fi
+          if [ $( ls $GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env 2>/dev/null | wc -l ) -gt 0 ]; then
+            buildah copy --chmod 644 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.d/*.env" "/container-entrypoint.d" 2>/dev/null
+          fi
       
       
       # Create /container-entrypoint.sh
-      #- name: Create /container-entrypoint.sh
-      #  run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
+      - name: Create /container-entrypoint.sh
+        run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
      
      # Create config (entrypoint)
-      #- name: Create config (entrypoint)
+      - name: Create config (entrypoint)
         # run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} #--> arguments not working
-      #  run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
+        run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
         
         
       # Create config (labels)
-      #- name: Create config (labels)
-      #  run: |
-      #    buildah config --label org.opencontainers.image.title="openSUSE Tumbleweed RMT Server container" ${{ env.WORK_CONTAINER }}
-      #    buildah config --label org.opencontainers.image.description="bla bla bla" ${{ env.WORK_CONTAINER }}
-      #    buildah config --label org.opencontainers.image.source="https://github.com/t-ru/container-images/tree/master/README.md" ${{ env.WORK_CONTAINER }}
+      - name: Create config (labels)
+        run: |
+          buildah config --label org.opencontainers.image.title="openSUSE Tumbleweed RMT Server container" ${{ env.WORK_CONTAINER }}
+          buildah config --label org.opencontainers.image.description="bla bla bla" ${{ env.WORK_CONTAINER }}
+          buildah config --label org.opencontainers.image.source="https://github.com/t-ru/container-images/tree/master/README.md" ${{ env.WORK_CONTAINER }}
     
     
       # Create target image
-      #- name: Create target image
-      #  run: buildah commit --format docker --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
+      - name: Create target image
+        run: buildah commit --format docker --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
       
       # Show images
-      #- name: Show images
-      #  run: buildah images
+      - name: Show images
+        run: buildah images
         
       # Create additional tags
-      #- name: Create additional tags
-      #  run: |
-      #    buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.run_number }}  
-      #    buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:latest
+      - name: Create additional tags
+        run: |
+          buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.run_number }}  
+          buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:latest
       
       # Show images
-      #- name: Show images
-      #  run: buildah images
+      - name: Show images
+        run: buildah images
       
-      #- name: Push to ghcr.io
-      #  id: push-to-ghcr
-      #  uses: redhat-actions/push-to-registry@v2
-      #  with:
-      #    image: ${{ env.TARGET_IMAGE_NAME }}
-      #    tags: latest ${{ github.run_number }} ${{ github.sha }}
-      #    registry: ghcr.io/${{ github.repository_owner }}/container-images
-      #    username: ${{ secrets.GHCR_USERNAME }}
-      #    password: ${{ secrets.GHCR_TOKEN }}
+      - name: Push to ghcr.io
+        id: push-to-ghcr
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ env.TARGET_IMAGE_NAME }}
+          tags: latest ${{ github.run_number }} ${{ github.sha }}
+          registry: ghcr.io/${{ github.repository_owner }}/container-images
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
       #    #registry: ghcr.io/${{ github.repository_owner }}/container-images
           
     
