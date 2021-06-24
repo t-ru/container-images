@@ -75,7 +75,11 @@ jobs:
       - name: Install packages (systemd)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends systemd
         
-
+      # Create /usr/sbin/init
+      - name: Create /usr/sbin/init
+        run: buildah run ${{ env.WORK_CONTAINER }} ln -s /usr/lib/systemd/systemd /usr/sbin/init
+        #run: buildah run ${{ env.WORK_CONTAINER }} cd /usr && ln -s ../lib/systemd/systemd /usr/sbin/init && cd /
+        
       # Install packages (hostname)
       #   prevent installation of busybox and busybox-hostname
       - name: Install packages (hostname)
