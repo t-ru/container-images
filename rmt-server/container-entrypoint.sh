@@ -58,8 +58,11 @@ fi
 #    fi
 #done
 
+echo "number of args = $#"
+
 # no command passed ... run a shell
 if [ $# = 0 ]; then
+
   if [ -x /bin/bash ]; then
     set -- /bin/bash
   else
