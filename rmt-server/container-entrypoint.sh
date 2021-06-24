@@ -29,12 +29,18 @@ if [ -d "/container-entrypoint.d" ]; then
         _extension="${_container_entrypoint##*.}"
         if [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "env" ]; then
             # source env files
-            echo "Sourcing: ${_container_entrypoint} $@"
-            set -a && . "${_container_entrypoint}" "$@" && set +a
+            #echo "Sourcing: ${_container_entrypoint} $@"
+            #set -a && . "${_container_entrypoint}" "$@" && set +a
+            echo "Sourcing: ${_container_entrypoint}"
+            set -a && . "${_container_entrypoint}" && set +a
+            
         elif [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "sh" ] && [ -x "${_container_entrypoint}" ]; then
             # run script files
-            echo "Executing: ${_container_entrypoint} $@"
-            "${_container_entrypoint}" "$@"
+            #echo "Executing: ${_container_entrypoint} $@"
+            #"${_container_entrypoint}" "$@"
+            echo "Executing: ${_container_entrypoint}"
+            "${_container_entrypoint}"
+
         fi
     done
 fi
@@ -61,5 +67,5 @@ if [ $# = 0 ]; then
   fi
 fi
 
-echo "Executing: $@"
-exec "$@"
+#echo "Executing: $@"
+#exec "$@"
