@@ -114,11 +114,14 @@ jobs:
       # Install packages (rmt-server)
       - name: Install packages (rmt-server)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends rmt-server
+        
+      # Install packages (catatonit)
+      - name: Install packages (catatonit)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends catatonit
       
 
       # ???
       #   pwgen
-      #   catatonit
       
       # Create /container-entrypoint.d
       - name: Create /container-entrypoint.d
