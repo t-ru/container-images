@@ -118,6 +118,11 @@ jobs:
       # Install packages (catatonit)
       - name: Install packages (catatonit)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends catatonit
+              
+      # Install packages (systemd)
+      - name: Install packages (systemd)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends systemd
+        
       
 
       # ???
