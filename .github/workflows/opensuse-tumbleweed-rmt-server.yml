@@ -80,6 +80,11 @@ jobs:
         run: buildah run ${{ env.WORK_CONTAINER }} ln -s /usr/lib/systemd/systemd /usr/sbin/init
         #run: buildah run ${{ env.WORK_CONTAINER }} cd /usr && ln -s ../lib/systemd/systemd /usr/sbin/init && cd /
         
+      # Create config (cmd)
+      - name: Create config (cmd)
+        run: buildah config --cmd "/usr/sbin/init" ${{ env.WORK_CONTAINER }}
+     
+        
       # Install packages (hostname)
       #   prevent installation of busybox and busybox-hostname
       - name: Install packages (hostname)
@@ -161,9 +166,9 @@ jobs:
         run: buildah copy --chmod 755 ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/rmt-server/container-entrypoint.sh" "/"
      
      # Create config (entrypoint)
-      - name: Create config (entrypoint)
+     # - name: Create config (entrypoint)
         # run: buildah config --entrypoint "/container-entrypoint.sh" ${{ env.WORK_CONTAINER }} #--> arguments not working
-        run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
+     #   run: buildah config --entrypoint '["/container-entrypoint.sh"]' ${{ env.WORK_CONTAINER }}
         
         
       # Create config (labels)
