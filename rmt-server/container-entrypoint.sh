@@ -2,6 +2,22 @@
 
 set -e
 
+output_set_cyan()
+{
+    tput setaf 6
+}
+
+output_reset()
+{
+    tput sgr0
+}
+
+output_set_bold()
+{
+    tput bold
+}
+
+
 # Handle a kill signal before the final "exec" command runs
 trap "{ exit 0; }" TERM INT
 
@@ -28,18 +44,30 @@ if [ -d "/container-entrypoint.d" ]; then
     for _container_entrypoint in /container-entrypoint.d/*; do
         _extension="${_container_entrypoint##*.}"
         if [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "env" ]; then
+            
             # source env files
             #echo "Sourcing: ${_container_entrypoint} $@"
             #set -a && . "${_container_entrypoint}" "$@" && set +a
-            echo "Sourcing: ${_container_entrypoint}"
+
+            echo ""
+            output_set_cyan
+            echo "---- Sourcing ${_container_entrypoint} ----"
+            output_reset
             set -a && . "${_container_entrypoint}" && set +a
+            echo ""
             
         elif [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "sh" ] && [ -x "${_container_entrypoint}" ]; then
+            
             # run script files
             #echo "Executing: ${_container_entrypoint} $@"
             #"${_container_entrypoint}" "$@"
-            echo "Executing: ${_container_entrypoint}"
+            
+            echo ""
+            output_set_cyan
+            echo "---- Executing ${_container_entrypoint} ----"
+            output_reset
             "${_container_entrypoint}"
+            echo ""
 
         fi
     done
