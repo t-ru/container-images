@@ -144,7 +144,8 @@ jobs:
       # Install packages (python3)
       - name: Install packages (python3)
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends python3
-        
+      
+      # Install container systemctl replacement
       - name: Install container systemctl replacement
         run: |
           wget https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl3.py -O /usr/bin/systemctl
