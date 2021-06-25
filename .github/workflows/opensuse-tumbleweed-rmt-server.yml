@@ -148,9 +148,9 @@ jobs:
       # Install container systemctl replacement
       - name: Install container systemctl replacement
         run: |
-          wget https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemctl.py -O "$GITHUB_WORKSPACE/systemctl.py"
-          buildah copy --chmod 755 --chown root:root ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/systemctl.py" "/usr/bin/systemctl"
-          rm "$GITHUB_WORKSPACE/systemctl.py"      
+          wget https://raw.githubusercontent.com/gdraheim/docker-systemctl-replacement/master/files/docker/systemct3l.py -O "$GITHUB_WORKSPACE/systemctl3.py"
+          buildah copy --chmod 755 --chown root:root ${{ env.WORK_CONTAINER }} "$GITHUB_WORKSPACE/systemctl3.py" "/usr/bin/systemctl"
+          rm "$GITHUB_WORKSPACE/systemctl3.py"      
       
   
      
