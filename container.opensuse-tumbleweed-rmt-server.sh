@@ -9,6 +9,94 @@
 # Functions
 ###################################################################################################
 
+
+#--------------------------------------------------------------------------------------------------
+# FUNCTION: output::write()
+#   -   Write arguments to the standard output
+#   -   Arguments
+#           $1                      Message
+#           --black                 optional | black terminal output
+#           --red                   optional | red terminal output
+#           --green                 optional | green terminal output
+#           --yellow                optional | yellow terminal output
+#           --blue                  optional | blue terminal output
+#           --magenta               optional | magenta terminal output
+#           --cyan                  optional | cyan terminal output
+#           --white                 optional | white terminal output
+#           --bold                  optional | bold terminal output
+#           --no-newline    -n      optional | no linebreak / no newline on output
+#   -   Usage
+#           msg "string" [optional args]
+#           msg "foo" --cyan
+#           msg "foo" --cyan --bold
+#           msg "foo" --cyan --no-newline
+function console___write()
+{
+    if [[ "$#" -eq 0 ]] ; then
+
+        echo ""
+
+    else
+
+        # https://linuxcommand.org/lc3_adv_tput.php
+        # https://riptutorial.com/bash/example/19531/a-function-that-accepts-named-parameters
+        
+        local _message="${1}"
+        local _newline="true"
+            
+        if [[ "$#" -gt 0 ]] ; then
+
+            while [[ "$#" -gt 0 ]]
+            do
+            
+                case ${1^^} in
+                    --BLACK)                tput setaf 0 ;;
+                    --RED)                  tput setaf 1 ;;
+                    --GREEN)                tput setaf 2 ;;
+                    --YELLOW)               tput setaf 3 ;;
+                    --BLUE)                 tput setaf 4 ;;
+                    --MAGENTA)              tput setaf 5 ;;
+                    --CYAN)                 tput setaf 6 ;;
+                    --WHITE)                tput setaf 7 ;;
+                    --BOLD)                 tput bold ;;
+                    --NO-NEWLINE | -N)      _newline="false" ;;
+                esac
+
+                shift
+
+            done
+
+        fi
+
+        if [ "${_newline}" == "true" ] ; then
+            echo "${_message}"
+        else
+            echo -n "${_message}"
+        fi
+
+        # reset
+        tput sgr0
+
+    fi
+}
+
+function console___set_cursor_to_column()
+{
+    local col=${1}
+    #col=$(($col-1))
+    #if [ ${col} -eq 0 ] ; then col=-1; fi
+    [ "${col}" -eq 1 ] && col=-1 || col=$((col-1))
+
+    echo -ne "\033[50D\033[${col}C"
+
+}
+
+
+
+
+
+
+
 #--------------------------------------------------------------------------------------------------
 # FUNCTION: trim()
 #   -   trims whitespace from left and right side of supplied string
@@ -235,117 +323,186 @@ function version ()
 
 function start ()
 {
-    echo ""
-    echo "start"
-    echo ""
+    local _file=""
+    local _dir=""
+    local _err="false"
 
     local _container_image=""
     local _container_name=""
 
-    local _rmt_base_path=""
-    local _rmt_mariadb_path=""
+    local _rmt_scc_user=""
+    local _rmt_scc_pw=""
+
+    local _hostname=$( hostname )
+    local _port_http="80"
+    local _port_https="443"
     
+    console___write ""
+    console___write "---- Check Binaries ----"
+    console___write ""
+
+    _file="/usr/bin/podman"
+    console___write "[ CHECK  ] ${_file}" --no-newline
+    console___set_cursor_to_column 1
+    sleep 1
+    if [[ -e "${_file}" ]] ; then
+        console___write "[ FOUND  ]" 
+    else
+        console___write "[ FAILED ]"
+        _err="true"
+    fi
+
+    _file="/usr/bin/certstrap"
+    console___write "[ CHECK  ] ${_file}" --no-newline
+    console___set_cursor_to_column 1
+    sleep 1
+    if [[ -e "${_file}" ]] ; then
+        console___write "[ FOUND  ]" 
+    else
+        console___write "[ FAILED ]"
+        _err="true"
+    fi
+
+    if [ "${_err}" == "true" ] ; then
+
+        console___write ""
+        console___write "---- Result ----"
+        console___write ""
+        console___write "Missing binaries."
+        console___write ""
+        console___write "Script aborted."
+        console___write ""
+        exit 2
+    fi
+
+
+
+    console___write ""
+    console___write "---- Configuration ----"
+    console___write ""
+   
     _container_image=$( config_file___get_value "${config_file_full}" "container_image" )
     _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
-    _rmt_base_path=$( config_file___get_value "${config_file_full}" "rmt_base_path" )
+    _container_base_path=$( config_file___get_value "${config_file_full}" "container_base_path" )
 
+    _scc_username=$( config_file___get_value "${config_file_full}" "scc_username" )
+    _scc_password=$( config_file___get_value "${config_file_full}" "scc_password" )
 
-    _rmt_mariadb_path="${_rmt_base_path}/mariadb"
+    _path_db="${_container_base_path}/mariadb"
+    _path_certs="${_container_base_path}/certs"
+    _path_storage="${_container_base_path}/storage"
 
+    console___write "Config File ...........................: ${config_file_full}"
+    console___write ""
+    console___write "Container Image .......................: ${_container_image}"
+    console___write "Container Name ........................: ${_container_name}"
+    console___write "Container Base Path ...................: ${_container_base_path}"
+    console___write ""
+    console___write "SCC Username ..........................: ${_scc_username}"
+    console___write "SCC Password ..........................: ${_scc_password}"
+    console___write ""
+    console___write "Hostname ..............................: ${_hostname}"
+    console___write "Port (HTTP) ...........................: ${_port_http}"
+    console___write "Port (HTTPS) ..........................: ${_port_https}"
 
+    console___write ""
+    console___write "Repo URL (HTTP) .......................: http://${_hostname}/repo"
+    console___write "Repo URL (HTTPS) ......................: https://${_hostname}/repo"
+       
     
     
-    echo ${_container_image}
-    echo ${_container_name}
-    echo ${_rmt_server_path}
+    console___write ""
+    console___write "---- Create Directories (if required) ----"
+    console___write ""
+        
+    mkdir -p ${_container_base_path}/var/lib/mysql
+    mkdir -p ${_container_base_path}/var/lib/rmt
+    mkdir -p ${_container_base_path}/etc/rmt/ssl
 
-    # Create directories
-    [ ! -d ${_rmt_base_path} ] && mkdir -p ${_rmt_base_path}
-    [ ! -d ${_rmt_base_path}/var/lib/mysql ] && mkdir -p ${_rmt_base_path}/var/lib/mysql
-    [ ! -d ${_rmt_base_path}/var/lib/rmt ] && mkdir -p ${_rmt_base_path}/var/lib/rmt
-
-
-
-    
+    console___write "Done."
 
 
 
-    
+    console___write ""
+    console___write "---- Create SSL Certificates (if required) ----"
+    console___write ""
 
 
+    if [ ! -e ${_container_base_path}/etc/rmt/ssl/rmt-ca.crt ]; then
+        echo "rmt-ca.crt not found."
+	    certstrap --depot-path ${_container_base_path}/etc/rmt/ssl/ init --common-name "rmt-ca" --passphrase ""
+    else
+	    echo "rmt-ca.crt found."
+    fi
+
+    echo ""
+
+    if [ ! -e ${_container_base_path}/etc/rmt/ssl/rmt-server.crt ]; then
+        echo "rmt-server.crt not found."
+        certstrap --depot-path ${_container_base_path}/etc/rmt/ssl/ request-cert -domain ${_hostname} --passphrase "" --common-name rmt-server
+	    certstrap --depot-path ${_container_base_path}/etc/rmt/ssl/ sign rmt-server --CA "rmt-ca"
+    else
+        echo "rmt-server.crt found."
+    fi
+
+    console___write ""
+    console___write "---- Pull Container Image ----"
+    console___write ""
+
+    podman pull ${_container_image}
 
 
+    console___write ""
+    console___write "---- Start RMT ----"
+    console___write ""
 
+    # start as deamon
+    _command="podman run -d -rm "
 
-    
-
-    _command="podman run -d --rm"
+    # start interactive
     _command="podman run -i -t --rm "
-    
+
     _command="${_command} --name ${_container_name}"
-
-
-
     
+    _command="${_command} -v ${_container_base_path}/var/lib/mysql:/var/lib/mysql"
+    _command="${_command} -v ${_container_base_path}/var/lib/rmt:/var/lib/rmt"
+    _command="${_command} -v ${_container_base_path}/etc/rmt/ssl:/etc/rmt/ssl"
 
     rm -rf /tmp/container-entrypoint.d
     rm -rf /tmp/container-entrypoint.sh
-    
     cp -r /home/a001480/container-images/rmt-server/container-entrypoint.d /tmp
     cp -r /home/a001480/container-images/rmt-server/container-entrypoint.d /tmp
     cp -r /home/a001480/container-images/rmt-server/container-entrypoint.sh /tmp
-
+    chown root:root /tmp/container-entrypoint.sh
+    chmod 755 /tmp/container-entrypoint.sh
+    _command="${_command} -v /tmp/container-entrypoint.d:/container-entrypoint.d"
+    _command="${_command} -v /tmp/container-entrypoint.sh:/container-entrypoint.sh"
     
-    _dir="/tmp/container-entrypoint.d"
+    _command="${_command} -p ${_port_http}:80/tcp"
+    _command="${_command} -p ${_port_https}:443/tcp"
 
-    _command="${_command} -v ${_dir}:/container-entrypoint.d"
-
-    #mntdir=$(mktemp -d /run/XXXXX)
-    #mounts=$(findmnt -n -m -R /sys/fs/cgroup/ | awk '{ print $1 }'| tail -n +2)
-    #for m in ${mounts}; do
-    #mkdir -p ${mntdir}/$m
-    #mount --bind -o ro $m ${mntdir}/$m
-    #done
-    #mount -o rw,remount ${mntdir}/sys/fs/cgroup/systemd
-    #echo "-v ${mntdir}:/sys/fs/cgroup"
-
-    #_command="${_command} -v ${mntdir}:/sys/fs/cgroup"
-    
-    
-
-    _command="${_command} -v ${_rmt_base_path}/var/lib/mysql:/var/lib/mysql"
-    _command="${_command} -v ${_rmt_base_path}/var/lib/rmt:/var/lib/rmt"
     _command="${_command} -e MYSQL_PASSWORD=rmt"
-    
-
-    
-    
-
-
-
-
-
+    _command="${_command} -e SCC_USERNAME=${_scc_username}"
+    _command="${_command} -e SCC_PASSWORD=${_scc_password}"
+        
     _command="${_command} ${_container_image} "
 
+    console___write "${_command}"
 
+    console___write ""
 
+    ${_command}
 
+    console___write ""
+    console___write "---- Result ----"
+    console___write ""
 
-     echo "${_command}"
+    console___write "To enter RMT Server execute: ..........: podman exec -i -t ${_container_name} bash"
+    console___write ""
+    console___write "Repo URL (HTTP) .......................: http://${_hostname}/repo"
+    console___write "Repo URL (HTTPS) ......................: https://${_hostname}/repo"
 
-     ${_command}
-
-
-    echo "podman exec -i -t ${_container_name} bash"
-
-
-    # https://developers.redhat.com/blog/2019/04/24/how-to-run-systemd-in-a-container#other_cool_features_about_podman_and_systemd
-    # https://blog.while-true-do.io/podman-systemd-in-containers/
-    # https://github.com/moby/moby/issues/18922
-
-
-
-
+    console___write ""
 }
 
 function stop ()
@@ -394,6 +551,12 @@ function usage()
 # Main program
 ###################################################################################################
 
+#### check user
+if ( ! is_root_user ) ; then
+    usage
+    exit 1
+fi
+
 #### setup environment
 script_file_full="$( realpath ${BASH_SOURCE[0]} )"
 script_file="${script_file_full##*/}"
@@ -402,14 +565,14 @@ script_dir="${script_file_full%/*}"
 config_file="${script_file%.*}.config"
 config_file_full="${script_dir}/${config_file}"
 
-echo ""
-echo "---- Environment ----"
-echo ""
-echo "script_file_full ......................: ${script_file_full}"
-echo "script_file ...........................: ${script_file}"
-echo "script_dir ............................: ${script_dir}"
-echo "config_file ...........................: ${config_file}"
-echo "config_file_full ......................: ${config_file_full}"
+#echo ""
+#echo "---- Environment ----"
+#echo ""
+#echo "script_file_full ......................: ${script_file_full}"
+#echo "script_file ...........................: ${script_file}"
+#echo "script_dir ............................: ${script_dir}"
+#echo "config_file ...........................: ${config_file}"
+#echo "config_file_full ......................: ${config_file_full}"
 
 #### check script command line args and execute
 script_args_count=${#BASH_ARGV[@]}
