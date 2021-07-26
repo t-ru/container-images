@@ -456,11 +456,11 @@ function start ()
     console___write "---- Start RMT ----"
     console___write ""
 
-    # start as deamon
-    _command="podman run -d -rm "
+    # start as daemon
+    _command="podman run -d -t -rm "
 
     # start interactive
-    _command="podman run -i -t --rm "
+    #_command="podman run -i -t --rm "
 
     _command="${_command} --name ${_container_name}"
     
