@@ -10,7 +10,7 @@ on:
 env:
   BASE_IMAGE_NAME: "registry.opensuse.org/opensuse/tumbleweed"
   BASE_IMAGE_TAG: "latest"
-  TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server-testing"
+  TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server"
   WORK_CONTAINER: "work-container"
   
 jobs:
