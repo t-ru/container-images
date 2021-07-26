@@ -99,6 +99,21 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" -a "$(id -u)" = '0' ]; then
 	exec su mysql -s /bin/bash -c "$BASH_SOURCE $@"
 fi
 
+
+
+
+
+script_file_full="$( realpath ${BASH_SOURCE[0]} )"
+
+tput setaf 6
+echo ""
+echo "---- Maria DB: Prepare startup (${script_file_full}) ----"
+tput sgr0
+
+
+
+
+
 if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 	# still need to check config, container may have started with --user
         _check_config "$@"
@@ -215,5 +230,9 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 	fi
 fi
 
+echo ""
+echo "Done."
+
 # startup implemented in 12-mariadb.sh
 #exec "$@"
+

@@ -49,12 +49,12 @@ if [ -d "/container-entrypoint.d" ]; then
             #echo "Sourcing: ${_container_entrypoint} $@"
             #set -a && . "${_container_entrypoint}" "$@" && set +a
 
-            echo ""
-            output_set_cyan
-            echo "---- Sourcing ${_container_entrypoint} ----"
-            output_reset
+            #echo ""
+            #output_set_cyan
+            #echo "---- Sourcing ${_container_entrypoint} ----"
+            #output_reset
             set -a && . "${_container_entrypoint}" && set +a
-            echo ""
+            #echo ""
             
         elif [ -f "${_container_entrypoint}" ] && [ "${_extension}" = "sh" ] && [ -x "${_container_entrypoint}" ]; then
             
@@ -62,12 +62,12 @@ if [ -d "/container-entrypoint.d" ]; then
             #echo "Executing: ${_container_entrypoint} $@"
             #"${_container_entrypoint}" "$@"
             
-            echo ""
-            output_set_cyan
-            echo "---- Executing ${_container_entrypoint} ----"
-            output_reset
+            #echo ""
+            #output_set_cyan
+            #echo "---- Executing ${_container_entrypoint} ----"
+            #output_reset
             "${_container_entrypoint}"
-            echo ""
+            #echo ""
 
         fi
     done
@@ -86,8 +86,8 @@ fi
 #    fi
 #done
 
-echo "number of args: $#"
-echo "args: "$@""
+#echo "number of args: $#"
+#echo "args: "$@""
 
 # no command passed ... run a shell
 if [ $# = 0 ]; then
@@ -98,5 +98,5 @@ if [ $# = 0 ]; then
     fi
 fi
 
-echo "Executing: $@"
+#echo "Executing: $@"
 exec "$@"
