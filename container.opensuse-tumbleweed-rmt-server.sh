@@ -457,7 +457,7 @@ function start ()
     console___write ""
 
     # start as daemon
-    _command="podman run -d -t -rm "
+    _command="podman run -d -t --rm "
 
     # start interactive
     #_command="podman run -i -t --rm "
