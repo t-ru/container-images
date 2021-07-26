@@ -7,5 +7,7 @@ echo ""
 echo "---- Nginx (${script_file_full}) ----"
 tput sgr0
 
+systemctl start nginx.service
+
 echo ""
-echo "Todo."
+echo "Done."

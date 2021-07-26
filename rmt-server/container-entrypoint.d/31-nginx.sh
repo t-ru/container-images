@@ -10,4 +10,4 @@ echo "---- Nginx: Prepare startup (${script_file_full}) ----"
 tput sgr0
 
 echo ""
-echo "Todo."
+echo "Done."
