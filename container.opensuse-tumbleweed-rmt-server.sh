@@ -468,15 +468,15 @@ function start ()
     _command="${_command} -v ${_container_base_path}/var/lib/rmt:/var/lib/rmt"
     _command="${_command} -v ${_container_base_path}/etc/rmt/ssl:/etc/rmt/ssl"
 
-    rm -rf /tmp/container-entrypoint.d
-    rm -rf /tmp/container-entrypoint.sh
-    cp -r /home/a001480/container-images/rmt-server/container-entrypoint.d /tmp
-    cp -r /home/a001480/container-images/rmt-server/container-entrypoint.d /tmp
-    cp -r /home/a001480/container-images/rmt-server/container-entrypoint.sh /tmp
-    chown root:root /tmp/container-entrypoint.sh
-    chmod 755 /tmp/container-entrypoint.sh
-    _command="${_command} -v /tmp/container-entrypoint.d:/container-entrypoint.d"
-    _command="${_command} -v /tmp/container-entrypoint.sh:/container-entrypoint.sh"
+    #rm -rf /tmp/container-entrypoint.d
+    #rm -rf /tmp/container-entrypoint.sh
+    #cp -r /home/a001480/container-images/rmt-server/container-entrypoint.d /tmp
+    #cp -r /home/a001480/container-images/rmt-server/container-entrypoint.d /tmp
+    #cp -r /home/a001480/container-images/rmt-server/container-entrypoint.sh /tmp
+    #chown root:root /tmp/container-entrypoint.sh
+    #chmod 755 /tmp/container-entrypoint.sh
+    #_command="${_command} -v /tmp/container-entrypoint.d:/container-entrypoint.d"
+    #_command="${_command} -v /tmp/container-entrypoint.sh:/container-entrypoint.sh"
     
     _command="${_command} -p ${_port_http}:80/tcp"
     _command="${_command} -p ${_port_https}:443/tcp"
