@@ -1,6 +1,23 @@
 #!/bin/bash
 
 ###################################################################################################
+#
+# Script:       podman.opensuse-tumbleweed-rmt-server.sh
+#
+# Description:  Script run RMT Server on containerized OpenSUSE Tumbleweed
+#
+# Author:       thomas.rudolph@gmail.com
+#
+# Url:          https://github.com/t-ru/container-images
+#
+# Version:      2021-07-27
+#
+# History:      2021-07-27      -   initial version
+#
+###################################################################################################
+
+
+###################################################################################################
 # Global Variables
 ###################################################################################################
 
@@ -9,93 +26,23 @@
 # Functions
 ###################################################################################################
 
-
 #--------------------------------------------------------------------------------------------------
-# FUNCTION: output::write()
-#   -   Write arguments to the standard output
-#   -   Arguments
-#           $1                      Message
-#           --black                 optional | black terminal output
-#           --red                   optional | red terminal output
-#           --green                 optional | green terminal output
-#           --yellow                optional | yellow terminal output
-#           --blue                  optional | blue terminal output
-#           --magenta               optional | magenta terminal output
-#           --cyan                  optional | cyan terminal output
-#           --white                 optional | white terminal output
-#           --bold                  optional | bold terminal output
-#           --no-newline    -n      optional | no linebreak / no newline on output
-#   -   Usage
-#           msg "string" [optional args]
-#           msg "foo" --cyan
-#           msg "foo" --cyan --bold
-#           msg "foo" --cyan --no-newline
-function console___write()
+# FUNCTION: is_root_user()
+#   -   root user check
+#   -   Return
+#           -   is root: return "1"
+#           -   is not root: return ""
+function is_root_user()
 {
-    if [[ "$#" -eq 0 ]] ; then
+    local _result=""
 
-        echo ""
+    # user is root: 1
+    # user is not root: ""
+    _result=$( [ $(id -u) -eq 0 ] && echo "1" || echo "" )
 
-    else
-
-        # https://linuxcommand.org/lc3_adv_tput.php
-        # https://riptutorial.com/bash/example/19531/a-function-that-accepts-named-parameters
-        
-        local _message="${1}"
-        local _newline="true"
-            
-        if [[ "$#" -gt 0 ]] ; then
-
-            while [[ "$#" -gt 0 ]]
-            do
-            
-                case ${1^^} in
-                    --BLACK)                tput setaf 0 ;;
-                    --RED)                  tput setaf 1 ;;
-                    --GREEN)                tput setaf 2 ;;
-                    --YELLOW)               tput setaf 3 ;;
-                    --BLUE)                 tput setaf 4 ;;
-                    --MAGENTA)              tput setaf 5 ;;
-                    --CYAN)                 tput setaf 6 ;;
-                    --WHITE)                tput setaf 7 ;;
-                    --BOLD)                 tput bold ;;
-                    --NO-NEWLINE | -N)      _newline="false" ;;
-                esac
-
-                shift
-
-            done
-
-        fi
-
-        if [ "${_newline}" == "true" ] ; then
-            echo "${_message}"
-        else
-            echo -n "${_message}"
-        fi
-
-        # reset
-        tput sgr0
-
-    fi
+    # echo silent (result will not printed to stdout)
+    [[ $( echo $_result ) ]]
 }
-
-function console___set_cursor_to_column()
-{
-    local col=${1}
-    #col=$(($col-1))
-    #if [ ${col} -eq 0 ] ; then col=-1; fi
-    [ "${col}" -eq 1 ] && col=-1 || col=$((col-1))
-
-    echo -ne "\033[50D\033[${col}C"
-
-}
-
-
-
-
-
-
 
 #--------------------------------------------------------------------------------------------------
 # FUNCTION: trim()
@@ -229,12 +176,89 @@ function config_file___get_value()
     echo -n "${_result}"
 }
 
+#--------------------------------------------------------------------------------------------------
+# FUNCTION: console___write()
+#   -   Write arguments to the standard output
+#   -   Arguments
+#           $1                      Message
+#           --black                 optional | black terminal output
+#           --red                   optional | red terminal output
+#           --green                 optional | green terminal output
+#           --yellow                optional | yellow terminal output
+#           --blue                  optional | blue terminal output
+#           --magenta               optional | magenta terminal output
+#           --cyan                  optional | cyan terminal output
+#           --white                 optional | white terminal output
+#           --bold                  optional | bold terminal output
+#           --no-newline    -n      optional | no linebreak / no newline on output
+#   -   Usage
+#           msg "string" [optional args]
+#           msg "foo" --cyan
+#           msg "foo" --cyan --bold
+#           msg "foo" --cyan --no-newline
+function console___write()
+{
+    if [[ "$#" -eq 0 ]] ; then
 
+        echo ""
 
+    else
 
+        # https://linuxcommand.org/lc3_adv_tput.php
+        # https://riptutorial.com/bash/example/19531/a-function-that-accepts-named-parameters
+        
+        local _message="${1}"
+        local _newline="true"
+            
+        if [[ "$#" -gt 0 ]] ; then
+
+            while [[ "$#" -gt 0 ]]
+            do
+            
+                case ${1^^} in
+                    --BLACK)                tput setaf 0 ;;
+                    --RED)                  tput setaf 1 ;;
+                    --GREEN)                tput setaf 2 ;;
+                    --YELLOW)               tput setaf 3 ;;
+                    --BLUE)                 tput setaf 4 ;;
+                    --MAGENTA)              tput setaf 5 ;;
+                    --CYAN)                 tput setaf 6 ;;
+                    --WHITE)                tput setaf 7 ;;
+                    --BOLD)                 tput bold ;;
+                    --NO-NEWLINE | -N)      _newline="false" ;;
+                esac
+
+                shift
+
+            done
+
+        fi
+
+        if [ "${_newline}" == "true" ] ; then
+            echo "${_message}"
+        else
+            echo -n "${_message}"
+        fi
+
+        # reset
+        tput sgr0
+
+    fi
+}
+
+function console___set_cursor_to_column()
+{
+    local col=${1}
+    #col=$(($col-1))
+    #if [ ${col} -eq 0 ] ; then col=-1; fi
+    [ "${col}" -eq 1 ] && col=-1 || col=$((col-1))
+
+    echo -ne "\033[50D\033[${col}C"
+
+}
 
 #--------------------------------------------------------------------------------------------------
-# FUNCTION: return_header_string()
+# FUNCTION: script_header___get_string()
 #   - Returns Header string information from comments of file
 #   - This keys off of the '# <header_identifier>: ' comment line found at the top of the scripts
 #   - Arguments
@@ -279,46 +303,121 @@ function script_header___get_author()
     echo -n "${_result}"
 }
 
-function script_header___get_copyright() 
+function script_header___get_url() 
 {
     local _file="${1}"
-    local _result=$( script_header___get_string "Copyright" "${script_file_full}" )
+    local _result=$( script_header___get_string "Url" "${script_file_full}" )
     echo -n "${_result}"
 }
 
-
-#--------------------------------------------------------------------------------------------------
-# FUNCTION: is_root_user()
-#   -   root user check
-#   -   Return
-#           -   is root: return "1"
-#           -   is not root: return ""
-function is_root_user()
+function script_header___get_script() 
 {
-    local _result=""
-
-    # user is root: 1
-    # user is not root: ""
-    _result=$( [ $(id -u) -eq 0 ] && echo "1" || echo "" )
-
-    # echo silent (result will not printed to stdout)
-    [[ $( echo $_result ) ]]
+    local _file="${1}"
+    local _result=$( script_header___get_string "Script" "${script_file_full}" )
+    echo -n "${_result}"
 }
 
-
-
-
-
 #--------------------------------------------------------------------------------------------------
-# FUNCTION: usage()
+# FUNCTION: version()
 #   -   show version of script
 function version ()
 {
     echo ""
-    echo "${script_file}"
+    echo "$( script_header___get_script '${script_file_full}' )"
     echo ""
     echo "Version $( script_header___get_version '${script_file_full}' )"
     echo ""
+}
+
+#--------------------------------------------------------------------------------------------------
+# FUNCTION: usage()
+#   -   show usage of script
+function usage()
+{
+
+    echo ""
+    echo "---- Usage ----"
+    echo ""
+    #echo "    as root user:                 ${0} <command> [--command-options]"
+    #echo "    with sudo:                    sudo ${0} <command> [--command-options]"
+    echo "    as root user:                 ${0} <options>"
+    echo "    with sudo:                    sudo ${0} <options>"
+    
+    echo ""
+    echo "---- Options ----"
+    echo ""
+    echo "    --start                         start container"
+    echo "    --stop                          stop container"
+    echo "    --version                       display version information and exit"
+    echo "    --help                          display this help and exit"
+
+    echo ""
+    echo "---- Info ----"
+    echo ""
+    echo "    Script:                       $( script_header___get_script '${script_file_full}' )"
+    echo "    Description:                  $( script_header___get_description '${script_file_full}' )"
+    echo "    Author:                       $( script_header___get_author '${script_file_full}' )"
+    echo "    Url:                          $( script_header___get_url '${script_file_full}' )"
+    echo "    Version:                      $( script_header___get_version '${script_file_full}' )"
+
+    echo ""
+
+}
+
+
+function initialize()
+{
+
+    #### script info
+    echo ""
+    echo "---- Info ----"
+    echo ""
+    echo "Script:                       $( script_header___get_script '${script_file_full}' )"
+    echo "Description:                  $( script_header___get_description '${script_file_full}' )"
+    echo "Author:                       $( script_header___get_author '${script_file_full}' )"
+    echo "Url:                          $( script_header___get_url '${script_file_full}' )"
+    echo "Version:                      $( script_header___get_version '${script_file_full}' )"
+    echo ""
+
+    #### check binaries
+    echo "---- Check binaries ----"
+
+    declare -a files=( "/usr/bin/podman" "/usr/bin/certstrap" )
+    required_packages="podman certstrap"
+    missing="false"
+
+    for (( i=1; i <= ${#files[@]}; i++ )) ; do
+
+        [[ "${i}" -eq 1 ]] && echo ""
+
+        console___write "[ CHECK  ] ${files[$(($i-1))]}" --no-newline
+        console___set_cursor_to_column 1
+        sleep 1
+        
+        if [[ -e "${files[$(($i-1))]}" ]] ; then
+            console___write "[ OK     ]" 
+        else
+            #echo "${files[$(($i-1))]} : not found"
+            console___write "[ FAILED ]"
+            missing="true"
+        fi 
+    done
+
+    if [ "${missing}" == "true" ] ; then
+        
+        echo ""
+        echo "---- Script aborted ----"
+        echo ""
+        echo "Binaries missing. Please install required packages."
+        echo ""
+        echo "Required packages: $required_packages"
+        echo ""
+        echo "Exit Code: 2"
+        echo ""
+        exit 2
+
+    fi
+
 }
 
 function start ()
@@ -457,7 +556,7 @@ function start ()
     console___write ""
 
     # start as daemon
-    _command="podman run -d -t --rm "
+    _command="podman run -d -t "
 
     # start interactive
     #_command="podman run -i -t --rm "
@@ -503,59 +602,68 @@ function start ()
     console___write "Repo URL (HTTPS) ......................: https://${_hostname}/repo"
 
     console___write ""
+
+
+    # podman ps -a
+
+    
 }
 
 function stop ()
 {
-   
-    podman stop opensuse-tumbleweed-rmt-server
+    echo ""
+    echo "---- Stop Container ----"
+    echo ""
+
+    local _id=""
+
+    local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
+
+    echo "Stop container ${_container_name}..."
+    
+    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
+
+    if ( ! is_empty "${_id}") ; then
+        echo "Container is running (ID: ${_id})."
+        podman stop ${_id} 1>/dev/null 2>&1
+        echo "Container stopped."
+    else
+        echo "Container is not running." 
+    fi
+
+    echo ""
+
+    echo "Remove container ${_container_name}..."
+    
+    _id=$( podman ps -all --filter "name=opensuse-tumbleweed-rmt-server" --format "{{.ID}}" | xargs echo )
+
+    if ( ! is_empty "${_id}") ; then
+        echo "Container found (ID: ${_id})."
+        podman rm -f ${_id} 1>/dev/null 2>&1
+        echo "Container removed."
+    else
+        echo "Container is not running." 
+    fi
+
+    echo ""
+    echo "---- Script finished ----"
+    echo ""
+    echo "Container ${_container_name} stopped and removed."
+    echo ""
+    echo "Exit Code: 0"
+    echo ""
+    exit 0
 
 }
 
 
-#--------------------------------------------------------------------------------------------------
-# FUNCTION: usage()
-#   -   show usage of script
-function usage()
-{
 
-    echo ""
-    echo "---- Usage ----"
-    echo ""
-    echo "    as root user:     ${0} [options]"
-    echo "    with sudo:        sudo ${0} [options]"
-    
-    echo ""
-    echo "---- Options ----"
-    echo ""
-    echo "    --start           start container"
-    echo "    --stop            stop container"
-    echo "    --version         display version information and exit"
-    echo "    --help            display this help and exit"
-    
-    echo ""
-    echo "---- Info ----"
-    echo ""
-    echo "    Script:           ${script_file}"
-    echo "    Description:      $( script_header___get_description '${script_file_full}' )"
-    echo "    Author:           $( script_header___get_author '${script_file_full}' )"
-    echo "    Copyright:        $( script_header___get_copyright '${script_file_full}' )"
-    echo "    Version:          $( script_header___get_version '${script_file_full}' )"
 
-    echo ""
-
-}
 
 
 ###################################################################################################
 # Main program
 ###################################################################################################
-
-#### check user
-if ( ! is_root_user ) ; then
-    usage
-    exit 1
-fi
 
 #### setup environment
 script_file_full="$( realpath ${BASH_SOURCE[0]} )"
@@ -574,16 +682,24 @@ config_file_full="${script_dir}/${config_file}"
 #echo "config_file ...........................: ${config_file}"
 #echo "config_file_full ......................: ${config_file_full}"
 
+
+#### check user
+if ( ! is_root_user ) ; then
+    usage
+    exit 1
+fi
+
+
 #### check script command line args and execute
 script_args_count=${#BASH_ARGV[@]}
 
 if [[ ${script_args_count} -ne 1 ]] ; then 
     echo ""
-    echo "Missing arguments."
+    echo "Invalid arguments."
     echo ""
     echo "Try '$0 --help' for more information."
     echo ""
-    exit 2
+    exit 3
 fi
 
 for script_arg in ${BASH_ARGV[*]} ; do
@@ -592,9 +708,12 @@ for script_arg in ${BASH_ARGV[*]} ; do
     
     case "$script_arg" in
 
-        --START)        start;;
-        --STOP)         stop;;
-        
+        --START)        initialize
+                        start
+                        ;;
+        --STOP)         initialize
+                        stop
+                        ;;
         --VERSION)      version ;;
         --HELP)         usage ;; 
         *)              echo ""
