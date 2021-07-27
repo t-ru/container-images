@@ -422,10 +422,7 @@ function initialize()
 
 function start ()
 {
-    local _file=""
-    local _dir=""
-    local _err="false"
-
+    
     local _container_image=""
     local _container_name=""
 
@@ -436,46 +433,6 @@ function start ()
     local _port_http="80"
     local _port_https="443"
     
-    console___write ""
-    console___write "---- Check Binaries ----"
-    console___write ""
-
-    _file="/usr/bin/podman"
-    console___write "[ CHECK  ] ${_file}" --no-newline
-    console___set_cursor_to_column 1
-    sleep 1
-    if [[ -e "${_file}" ]] ; then
-        console___write "[ FOUND  ]" 
-    else
-        console___write "[ FAILED ]"
-        _err="true"
-    fi
-
-    _file="/usr/bin/certstrap"
-    console___write "[ CHECK  ] ${_file}" --no-newline
-    console___set_cursor_to_column 1
-    sleep 1
-    if [[ -e "${_file}" ]] ; then
-        console___write "[ FOUND  ]" 
-    else
-        console___write "[ FAILED ]"
-        _err="true"
-    fi
-
-    if [ "${_err}" == "true" ] ; then
-
-        console___write ""
-        console___write "---- Result ----"
-        console___write ""
-        console___write "Missing binaries."
-        console___write ""
-        console___write "Script aborted."
-        console___write ""
-        exit 2
-    fi
-
-
-
     console___write ""
     console___write "---- Configuration ----"
     console___write ""
