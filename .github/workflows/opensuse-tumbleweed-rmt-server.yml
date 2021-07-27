@@ -10,7 +10,7 @@ on:
 env:
   BASE_IMAGE_NAME: "registry.opensuse.org/opensuse/tumbleweed"
   BASE_IMAGE_TAG: "latest"
-  TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server-testing"
+  TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server"
   WORK_CONTAINER: "work-container"
   
 jobs:
@@ -153,7 +153,7 @@ jobs:
       - name: Create config (labels)
         run: |
           buildah config --label org.opencontainers.image.title="openSUSE Tumbleweed RMT Server container" ${{ env.WORK_CONTAINER }}
-          buildah config --label org.opencontainers.image.description="bla bla bla" ${{ env.WORK_CONTAINER }}
+          buildah config --label org.opencontainers.image.description="Image containing RMT Server, MariaDB, Nginx" ${{ env.WORK_CONTAINER }}
           buildah config --label org.opencontainers.image.source="https://github.com/t-ru/container-images/tree/master/README.md" ${{ env.WORK_CONTAINER }}
     
     
