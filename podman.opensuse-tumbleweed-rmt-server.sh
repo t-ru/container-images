@@ -348,6 +348,8 @@ function usage()
     echo ""
     echo "    --start                         start container"
     echo "    --stop                          stop container"
+    echo "    --login                         login to container"
+    
     echo "    --version                       display version information and exit"
     echo "    --help                          display this help and exit"
 
@@ -419,6 +421,38 @@ function initialize()
     fi
 
 }
+
+function login()
+{
+
+    echo ""
+    echo "---- Login to Container and run bash ----"
+    echo ""
+
+    local _id=""
+
+    local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
+
+    echo "Login to container ${_container_name}..."
+    
+    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
+
+    if ( ! is_empty "${_id}") ; then
+        echo "Container is running (ID: ${_id})."
+        echo ""
+
+        podman exec -i -t ${_container_name} bash
+        
+    else
+        echo "Container is not running." 
+    fi
+
+    echo ""
+
+}
+
+
+
 
 function start ()
 {
@@ -665,20 +699,23 @@ for script_arg in ${BASH_ARGV[*]} ; do
     
     case "$script_arg" in
 
-        --START)        initialize
-                        start
-                        ;;
-        --STOP)         initialize
-                        stop
-                        ;;
-        --VERSION)      version ;;
-        --HELP)         usage ;; 
-        *)              echo ""
-                        echo "Invalid arguments."
-                        echo ""
-                        echo "Try '$0 --help' for more information."
-                        echo ""
-                        exit 3
+        --START)                initialize
+                                start
+                                ;;
+        --STOP)                 initialize
+                                stop
+                                ;;
+        --LOGIN)                initialize
+                                login
+                                ;;
+        --VERSION)              version ;;
+        --HELP)                 usage ;; 
+        *)                      echo ""
+                                echo "Invalid arguments."
+                                echo ""
+                                echo "Try '$0 --help' for more information."
+                                echo ""
+                                exit 3
 
     esac
 
