@@ -631,6 +631,9 @@ function container___status()
 {
     local _id=""
     local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
+    
+    local _container_startup_finished="false"
+    local _container_startup_status=""
 
     local _service_status=""
 
@@ -638,13 +641,17 @@ function container___status()
 
     echo ""
 
-    #### Container Status
-    echo "---- Container and Services Status ----"
+    #### Status
+    echo "---- Status ----"
     echo ""    
     
     _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
 
-    console___write "[ CHECK   ] Container: ${_container_name}" --no-newline
+    if ( ! is_empty "${_id}") ; then
+        _container_started="true"
+    fi
+
+    console___write "[ CHECK    ] Container: ${_container_name}" --no-newline
     console___set_cursor_to_column 1
     
     # workarround...  
@@ -655,42 +662,58 @@ function container___status()
     sleep 1
         
     if ( ! is_empty "${_id}") ; then
-        console___write "[ STARTED ]"
+        console___write "[ STARTED  ]"
     else
-        console___write "[ STOPPED ]"
+        console___write "[ STOPPED  ]"
     fi
 
-    console___write "[ CHECK   ] Service:   mariadb" --no-newline
+    console___write "[ CHECK    ] Container: Startup Script" --no-newline
+    console___set_cursor_to_column 1
+    sleep 1
+    
+    if ( ! is_empty "${_id}") ; then
+        _container_startup_status=$( podman exec -i -t opensuse-tumbleweed-rmt-server bash -c "cat /container-entrypoint.status | grep 'entrypoint script finished' | wc -l" )
+        if [[ ${_container_startup_status} == 1* ]] ; then
+            console___write "[ FINISHED ]"
+            _container_startup_finished="true"
+        else
+            console___write "[ RUNNING  ]"
+        fi
+    else
+        console___write "[ SKIPPED  ]"
+    fi
+
+    console___write "[ CHECK    ] Service:   mariadb" --no-newline
     console___set_cursor_to_column 1
     sleep 1
 
-    if ( ! is_empty "${_id}") ; then
+    if [ "${_container_startup_finished}" == "true" ] ; then
         _service_status=$( podman exec -i -t ${_container_name} bash -c "systemctl is-active mariadb.service" )
-        [[ ${_service_status} == active* ]] && console___write "[ STARTED ]" || console___write "[ STOPPED ]"
+        [[ ${_service_status} == active* ]] && console___write "[ STARTED  ]" || console___write "[ STOPPED  ]"
     else
-        console___write "[ SKIPPED ]"
+        console___write "[ SKIPPED  ]"
     fi
-
-    console___write "[ CHECK   ] Service:   rmt-server" --no-newline
+    
+    console___write "[ CHECK    ] Service:   rmt-server" --no-newline
     console___set_cursor_to_column 1
     sleep 1
 
-    if ( ! is_empty "${_id}") ; then
+    if [ "${_container_startup_finished}" == "true" ] ; then
         _service_status=$( podman exec -i -t ${_container_name} bash -c "systemctl is-active rmt-server.service" )
-        [[ ${_service_status} == active* ]] && console___write "[ STARTED ]" || console___write "[ STOPPED ]"
+        [[ ${_service_status} == active* ]] && console___write "[ STARTED  ]" || console___write "[ STOPPED  ]"
     else
-        console___write "[ SKIPPED ]"
+        console___write "[ SKIPPED  ]"
     fi
 
-    console___write "[ CHECK   ] Service:   nginx" --no-newline
+    console___write "[ CHECK    ] Service:   nginx" --no-newline
     console___set_cursor_to_column 1
     sleep 1
 
-    if ( ! is_empty "${_id}") ; then
+    if [ "${_container_startup_finished}" == "true" ] ; then
          _service_status=$( podman exec -i -t ${_container_name} bash -c "systemctl is-active nginx.service" )
-        [[ ${_service_status} == active* ]] && console___write "[ STARTED ]" || console___write "[ STOPPED ]"
+        [[ ${_service_status} == active* ]] && console___write "[ STARTED  ]" || console___write "[ STOPPED  ]"
     else
-        console___write "[ SKIPPED ]"
+        console___write "[ SKIPPED  ]"
     fi   
 
     echo ""
