@@ -422,7 +422,7 @@ function initialize()
 
 }
 
-function login()
+function container___login()
 {
 
     echo ""
@@ -706,7 +706,7 @@ for script_arg in ${BASH_ARGV[*]} ; do
                                 stop
                                 ;;
         --LOGIN)                initialize
-                                login
+                                container___login
                                 ;;
         --VERSION)              version ;;
         --HELP)                 usage ;; 
