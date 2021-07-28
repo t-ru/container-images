@@ -426,19 +426,19 @@ function container___login()
 {
 
     echo ""
-    echo "---- Login to Container and run bash ----"
+    echo "---- Login to Container ----"
     echo ""
 
     local _id=""
 
     local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
 
-    echo "Login to container ${_container_name}..."
-    
     _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
 
     if ( ! is_empty "${_id}") ; then
+        
         echo "Container is running (ID: ${_id})."
+        echo "Login..."
         echo ""
 
         podman exec -i -t ${_container_name} bash
