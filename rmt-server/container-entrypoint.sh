@@ -2,6 +2,9 @@
 
 set -e
 
+# write to /container-entrypoint.status
+echo "entrypoint script started" > /container-entrypoint.status
+
 # Handle a kill signal before the final "exec" command runs
 trap "{ exit 0; }" TERM INT
 
@@ -77,6 +80,9 @@ if [ $# = 0 ]; then
         set -- /bin/sh
     fi
 fi
+
+# write to /container-entrypoint.status
+echo "entrypoint script finished" >> /container-entrypoint.status
 
 #echo "Executing: $@" 
 exec "$@"
