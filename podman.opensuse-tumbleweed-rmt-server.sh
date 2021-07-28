@@ -592,7 +592,7 @@ function container___stop ()
     echo "---- Stop Container ----"
     echo ""
     
-    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
+    _id=$( podman ps --filter "name=${_container_name}" --filter "status=running" --format "{{.ID}}" | xargs echo )
     
     echo "Container name: ${_container_name}"
     echo "Container ID: ${_id}."
@@ -612,7 +612,7 @@ function container___stop ()
     echo "---- Remove Container ----"
     echo ""
     
-    _id=$( podman ps -all --filter "name=opensuse-tumbleweed-rmt-server" --format "{{.ID}}" | xargs echo )
+    _id=$( podman ps -all --filter "name=${_container_name}" --format "{{.ID}}" | xargs echo )
 
     echo "Container name: ${_container_name}"
     echo "Container ID: ${_id}."
