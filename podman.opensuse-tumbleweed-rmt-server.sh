@@ -586,7 +586,7 @@ function container___stop ()
             
     if ( ! is_empty "${_id}") ; then
         echo "Container status: running."
-        #podman stop ${_id} 1>/dev/null 2>&1
+        podman stop ${_id} 1>/dev/null 2>&1
         echo "Container stopped."
     else
         echo "Container status: not running."
@@ -606,7 +606,7 @@ function container___stop ()
 
     if ( ! is_empty "${_id}") ; then
         echo "Container status: exists."
-        #podman rm -f ${_id} 1>/dev/null 2>&1
+        podman rm -f ${_id} 1>/dev/null 2>&1
         echo "Container removed."
     else
         echo "Container status: does not exist" 
