@@ -348,8 +348,9 @@ function usage()
     echo ""
     echo "    --start                         start container"
     echo "    --stop                          stop container"
+    echo "    --status                        show container status"
     echo "    --login                         login to container"
-    
+    echo ""
     echo "    --version                       display version information and exit"
     echo "    --help                          display this help and exit"
 
@@ -626,6 +627,14 @@ function container___stop ()
 
 }
 
+function container___status()
+{
+    echo ""
+    echo "function not implemented."
+    echo ""
+
+}
+
 
 function container___login()
 {
@@ -723,6 +732,9 @@ for script_arg in ${BASH_ARGV[*]} ; do
                                 ;;
         --STOP)                 container___init
                                 container___stop
+                                ;;
+        --STATUS)               container___init
+                                container___status
                                 ;;
         --LOGIN)                container___init
                                 container___login
