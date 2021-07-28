@@ -568,45 +568,7 @@ function container___start ()
     
 }
 
-
-function container___login()
-{
-
-    echo ""
-    echo "---- Login to Container ----"
-    echo ""
-
-    local _id=""
-
-    local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
-
-    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
-
-    echo "Container name: ${_container_name}"
-    echo "Container ID: ${_id}."
-        
-    if ( ! is_empty "${_id}") ; then
-        
-        echo "Container status: running."
-        echo "Login..."
-        echo ""
-
-        podman exec -i -t ${_container_name} bash
-        
-    else
-        echo "Container status: not running."
-    fi
-
-    echo ""
-
-}
-
-
-
-
-
-
-function stop ()
+function container___stop ()
 {
     echo ""
     echo "---- Stop Container ----"
@@ -652,6 +614,46 @@ function stop ()
     exit 0
 
 }
+
+
+function container___login()
+{
+
+    echo ""
+    echo "---- Login to Container ----"
+    echo ""
+
+    local _id=""
+
+    local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
+
+    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
+
+    echo "Container name: ${_container_name}"
+    echo "Container ID: ${_id}."
+        
+    if ( ! is_empty "${_id}") ; then
+        
+        echo "Container status: running."
+        echo "Login..."
+        echo ""
+
+        podman exec -i -t ${_container_name} bash
+        
+    else
+        echo "Container status: not running."
+    fi
+
+    echo ""
+
+}
+
+
+
+
+
+
+
 
 
 
@@ -709,7 +711,7 @@ for script_arg in ${BASH_ARGV[*]} ; do
                                 container___start
                                 ;;
         --STOP)                 container___init
-                                stop
+                                container___stop
                                 ;;
         --LOGIN)                container___init
                                 container___login
