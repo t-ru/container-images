@@ -743,7 +743,7 @@ function container___login()
 
     local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
 
-    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
+    _id=$( podman ps --filter "name=${_container_name}" --filter "status=running" --format "{{.ID}}" | xargs echo )
 
     echo "Container name: ${_container_name}"
     echo "Container ID: ${_id}."
