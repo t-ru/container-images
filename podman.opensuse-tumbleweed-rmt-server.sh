@@ -10,9 +10,21 @@
 #
 # Url:          https://github.com/t-ru/container-images
 #
-# Version:      2021-07-27
+# Version:      2021-07-28
 #
-# History:      2021-07-27      -   initial version
+# History:      2021-07-28      -   functions added / implemented
+#                                   -   container___init
+#                               -   functions changed
+#                                   -   container___login
+#                                   -   container___start
+#                                   -   container___stop
+#                                   -   usage
+#                               -   functions renamed
+#                                   -   initialize      -->     container___init
+#                                   -   start           -->     container___start
+#                                   -   stop            -->     container___stop
+#                                   -   login           -->     container___login
+#               2021-07-27      -   initial version
 #
 ###################################################################################################
 
