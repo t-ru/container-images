@@ -570,41 +570,52 @@ function container___start ()
 
 function container___stop ()
 {
-    echo ""
-    echo "---- Stop Container ----"
-    echo ""
-
     local _id=""
-
     local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
 
-    echo "Stop container ${_container_name}..."
+    echo ""
+
+    #### Stop Container
+    echo "---- Stop Container ----"
+    echo ""
     
     _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
-
+    
+    echo "Container name: ${_container_name}"
+    echo "Container ID: ${_id}."
+            
     if ( ! is_empty "${_id}") ; then
-        echo "Container is running (ID: ${_id})."
-        podman stop ${_id} 1>/dev/null 2>&1
+        echo "Container status: running."
+        #podman stop ${_id} 1>/dev/null 2>&1
         echo "Container stopped."
     else
-        echo "Container is not running." 
+        echo "Container status: not running."
     fi
 
     echo ""
 
-    echo "Remove container ${_container_name}..."
+
+    #### Remove Container
+    echo "---- Remove Container ----"
+    echo ""
     
     _id=$( podman ps -all --filter "name=opensuse-tumbleweed-rmt-server" --format "{{.ID}}" | xargs echo )
 
+    echo "Container name: ${_container_name}"
+    echo "Container ID: ${_id}."
+
     if ( ! is_empty "${_id}") ; then
-        echo "Container found (ID: ${_id})."
-        podman rm -f ${_id} 1>/dev/null 2>&1
+        echo "Container status: exists."
+        #podman rm -f ${_id} 1>/dev/null 2>&1
         echo "Container removed."
     else
-        echo "Container is not running." 
+        echo "Container status: does not exist" 
     fi
 
     echo ""
+
+
+    #### Result
     echo "---- Script finished ----"
     echo ""
     echo "Container ${_container_name} stopped and removed."
