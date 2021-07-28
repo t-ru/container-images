@@ -422,42 +422,7 @@ function container___init()
 
 }
 
-function container___login()
-{
-
-    echo ""
-    echo "---- Login to Container ----"
-    echo ""
-
-    local _id=""
-
-    local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
-
-    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
-
-    echo "Container name: ${_container_name}"
-    echo "Container ID: ${_id}."
-        
-    if ( ! is_empty "${_id}") ; then
-        
-        echo "Container status: running."
-        echo "Login..."
-        echo ""
-
-        podman exec -i -t ${_container_name} bash
-        
-    else
-        echo "Container status: not running."
-    fi
-
-    echo ""
-
-}
-
-
-
-
-function start ()
+function container___start ()
 {
     
     local _container_image=""
@@ -603,6 +568,44 @@ function start ()
     
 }
 
+
+function container___login()
+{
+
+    echo ""
+    echo "---- Login to Container ----"
+    echo ""
+
+    local _id=""
+
+    local _container_name=$( config_file___get_value "${config_file_full}" "container_name" )
+
+    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
+
+    echo "Container name: ${_container_name}"
+    echo "Container ID: ${_id}."
+        
+    if ( ! is_empty "${_id}") ; then
+        
+        echo "Container status: running."
+        echo "Login..."
+        echo ""
+
+        podman exec -i -t ${_container_name} bash
+        
+    else
+        echo "Container status: not running."
+    fi
+
+    echo ""
+
+}
+
+
+
+
+
+
 function stop ()
 {
     echo ""
@@ -703,7 +706,7 @@ for script_arg in ${BASH_ARGV[*]} ; do
     case "$script_arg" in
 
         --START)                container___init
-                                start
+                                container___start
                                 ;;
         --STOP)                 container___init
                                 stop
