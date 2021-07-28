@@ -649,7 +649,7 @@ function container___status()
 
     local _service_status=""
 
-    _container_name=$(trim ""${_container_name})
+    _container_name=$(trim "${_container_name}")
 
     echo ""
 
@@ -657,7 +657,7 @@ function container___status()
     echo "---- Status ----"
     echo ""    
     
-    _id=$( podman ps --filter "name=opensuse-tumbleweed-rmt-server" --filter "status=running" --format "{{.ID}}" | xargs echo )
+    _id=$( podman ps --filter "name=${_container_name}" --filter "status=running" --format "{{.ID}}" | xargs echo )
 
     if ( ! is_empty "${_id}") ; then
         _container_started="true"
@@ -684,7 +684,7 @@ function container___status()
     sleep 1
     
     if ( ! is_empty "${_id}") ; then
-        _container_startup_status=$( podman exec -i -t opensuse-tumbleweed-rmt-server bash -c "cat /container-entrypoint.status | grep 'entrypoint script finished' | wc -l" )
+        _container_startup_status=$( podman exec -i -t ${_container_name} bash -c "cat /container-entrypoint.status | grep 'entrypoint script finished' | wc -l" )
         if [[ ${_container_startup_status} == 1* ]] ; then
             console___write "[ FINISHED ]"
             _container_startup_finished="true"
