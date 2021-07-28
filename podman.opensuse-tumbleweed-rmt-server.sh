@@ -367,7 +367,7 @@ function usage()
 }
 
 
-function initialize()
+function container___init()
 {
 
     #### script info
@@ -699,13 +699,13 @@ for script_arg in ${BASH_ARGV[*]} ; do
     
     case "$script_arg" in
 
-        --START)                initialize
+        --START)                container___init
                                 start
                                 ;;
-        --STOP)                 initialize
+        --STOP)                 container___init
                                 stop
                                 ;;
-        --LOGIN)                initialize
+        --LOGIN)                container___init
                                 container___login
                                 ;;
         --VERSION)              version ;;
