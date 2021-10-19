@@ -64,6 +64,13 @@ jobs:
       #   tumbleweed: "zypper dup" not "zypper up"
       - name: Install updates
         run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
+        
+      # Add KIWI-NG repository
+      - name: Add KIWI-NG repository
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper addrepo http://download.opensuse.org/repositories/Virtualization:/Appliances:/Builder/openSUSE_Tumbleweed appliance-builder
+      
+      
+      
 
 
 
