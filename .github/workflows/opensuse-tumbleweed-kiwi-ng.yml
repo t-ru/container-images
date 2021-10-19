@@ -67,8 +67,9 @@ jobs:
         
       # Add KIWI NG repository
       - name: Add KIWI NG repository
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper addrepo http://download.opensuse.org/repositories/Virtualization:/Appliances:/Builder/openSUSE_Tumbleweed appliance-builder
-      
+        run: |
+          buildah run ${{ env.WORK_CONTAINER }} zypper addrepo http://download.opensuse.org/repositories/Virtualization:/Appliances:/Builder/openSUSE_Tumbleweed appliance-builder
+          buildah run ${{ env.WORK_CONTAINER }} zypper --gpg-auto-import-keys refresh
       
       
 
