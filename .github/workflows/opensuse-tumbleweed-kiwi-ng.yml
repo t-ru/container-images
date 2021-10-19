@@ -48,7 +48,6 @@ jobs:
       # Remove config
       - name: Remove config
         run: |
-        
           buildah config --cmd "[]" ${{ env.WORK_CONTAINER }}
           buildah config --entrypoint "[]" ${{ env.WORK_CONTAINER }}
           buildah config --env - ${{ env.WORK_CONTAINER }}
