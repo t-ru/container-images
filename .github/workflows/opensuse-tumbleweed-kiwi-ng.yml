@@ -54,6 +54,7 @@ jobs:
           buildah config --port - ${{ env.WORK_CONTAINER }}
           buildah config --volume - ${{ env.WORK_CONTAINER }}
           buildah config --label - ${{ env.WORK_CONTAINER }}
+          buildah config --author - ${{ env.WORK_CONTAINER }}
       
       # Refresh repositories
       - name: Refresh repositories
