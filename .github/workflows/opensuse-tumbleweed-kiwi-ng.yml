@@ -1,4 +1,4 @@
-name: opensuse-tumbleweed-rmt-server
+name: opensuse-tumbleweed-kiwi-ng
 
 on:
 
@@ -10,7 +10,7 @@ on:
 env:
   BASE_IMAGE_NAME: "registry.opensuse.org/opensuse/tumbleweed"
   BASE_IMAGE_TAG: "latest"
-  TARGET_IMAGE_NAME: "opensuse-tumbleweed-rmt-server"
+  TARGET_IMAGE_NAME: "opensuse-tumbleweed-kiwi-ng"
   WORK_CONTAINER: "work-container"
   
 jobs:
