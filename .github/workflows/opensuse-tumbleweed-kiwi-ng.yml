@@ -64,3 +64,36 @@ jobs:
       #   tumbleweed: "zypper dup" not "zypper up"
       - name: Install updates
         run: buildah run ${{ env.WORK_CONTAINER }} zypper dup --no-confirm --no-recommends
+
+
+
+
+
+
+      # Create target image
+      - name: Create target image
+        run: buildah commit --format docker --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
+      
+      # Show images
+      - name: Show images
+        run: buildah images
+        
+      # Create additional tags
+      - name: Create additional tags
+        run: |
+          buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.run_number }}  
+          buildah tag ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }} ${{ env.TARGET_IMAGE_NAME }}:latest
+      
+      # Show images
+      - name: Show images
+        run: buildah images
+      
+      #- name: Push to ghcr.io
+      #  id: push-to-ghcr
+      #  uses: redhat-actions/push-to-registry@v2
+      #  with:
+      #    image: ${{ env.TARGET_IMAGE_NAME }}
+      #    tags: latest ${{ github.run_number }} ${{ github.sha }}
+      #    registry: ghcr.io/${{ github.repository_owner }}/container-images
+      #    username: ${{ secrets.GHCR_USERNAME }}
+      #    password: ${{ secrets.GHCR_TOKEN }}
