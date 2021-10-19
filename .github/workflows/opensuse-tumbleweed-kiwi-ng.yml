@@ -75,12 +75,12 @@ jobs:
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends python3-kiwi
 
       # Install packages (gzip)
-      #- name: Install packages (gzip)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends gzip
+      - name: Install packages (gzip)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends gzip
       
       # Install packages (kiwi-systemdeps)
-      #- name: Install packages (kiwi-systemdeps)
-      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends kiwi-systemdeps
+      - name: Install packages (kiwi-systemdeps)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends kiwi-systemdeps
       
         
 
