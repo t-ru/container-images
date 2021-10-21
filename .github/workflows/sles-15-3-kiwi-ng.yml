@@ -54,7 +54,7 @@ jobs:
           # Register
           buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
           # Save SCCcredentials
-          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/tmp/SCCcredentials ${{ env.WORK_CONTAINER }} cat /etc/zypp/credentials.d/SCCcredentials > /tmp/SCCcredentials
+          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/tmp/SCCcredentials ${{ env.WORK_CONTAINER }} cat /etc/zypp/credentials.d/SCCcredentials > /tmp/SCCcredentials && cat /tmp/SCCcredentials
           echo "$GITHUB_WORKSPACE/SCCcredentials.tmp-2"
           cat $GITHUB_WORKSPACE/SCCcredentials.tmp-2
           
