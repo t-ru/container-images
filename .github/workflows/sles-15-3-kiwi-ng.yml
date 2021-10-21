@@ -40,13 +40,13 @@ jobs:
       # Create SCCcredentials
       - name: Create SCCcredentials
         run: |
-          # Create SCCcredentials.tmp
-          touch $GITHUB_WORKSPACE/SCCcredentials.tmp
-          echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp
-          echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp
           # Create work container
           buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
           # Install packages (SUSEConnect)
           buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
+          # Register
+          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
+          
+          
           
           
