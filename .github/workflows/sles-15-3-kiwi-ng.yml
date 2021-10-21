@@ -36,7 +36,7 @@ jobs:
       # Show images
       - name: Show images
         run: buildah images
-        
+      
       # Create work container
       - name: Create work container
         run: buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
@@ -44,14 +44,12 @@ jobs:
       # Show containers
       - name: Show containers
         run: buildah containers
+      
+      # Inspect base image
+      - name: Inspect base image
+        run: buildah inspect --type image ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
 
-      
-      
-      
-      
-      
-      
-        
+
 
 
 
