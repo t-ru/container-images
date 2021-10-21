@@ -51,6 +51,7 @@ jobs:
           # Register at SUSE SCC
           buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
           # copy
+          buildah unshare
           mnt=$(buildah mount "${{ env.WORK_CONTAINER }}")
           ls $mnt
           # cp $mnt/PATHTOSRC /PATHTODEST
