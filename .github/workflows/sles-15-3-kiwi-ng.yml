@@ -48,6 +48,7 @@ jobs:
           buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
           mkdir $GITHUB_WORKSPACE/scc-creds
           buildah run -v $GITHUB_WORKSPACE/scc-creds:/scc-creds ${{ env.WORK_CONTAINER }} cp "/etc/zypp/credentials.d/SCCcredentials" "/scc-creds"
+          ls $GITHUB_WORKSPACE/scc-creds
           
           
           
