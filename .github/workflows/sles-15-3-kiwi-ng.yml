@@ -37,8 +37,8 @@ jobs:
       - name: Show images
         run: buildah images
         
-      # Create SCCcredentials
-      - name: Create SCCcredentials
+      # Create SCC credentials
+      - name: Create SCC credentials
         run: |
           # Create work container
           buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
@@ -58,8 +58,8 @@ jobs:
           # Remove work container
           buildah rm ${{ env.WORK_CONTAINER }}
       
-      # Show SCCcredentials
-      - name: Show SCCcredentials
+      # Show SCC credentials
+      - name: Show SCC credentials
         run: cat $GITHUB_WORKSPACE/SCCcredentials
         
           
