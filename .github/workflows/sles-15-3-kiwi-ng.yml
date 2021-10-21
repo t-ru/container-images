@@ -59,7 +59,7 @@ jobs:
           buildah rm ${{ env.WORK_CONTAINER }}
       
       # Show SCCcredentials
-      - name: Create SCCcredentials
+      - name: Show SCCcredentials
         run: cat $GITHUB_WORKSPACE/SCCcredentials
         
           
