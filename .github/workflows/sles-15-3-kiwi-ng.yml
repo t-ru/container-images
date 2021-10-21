@@ -38,16 +38,16 @@ jobs:
         run: buildah images
         
       # Create SCCcredentials
-      - name: Create SCCcredentials
-        run: |
-          # Create an empty SCCcredentials
-          touch $GITHUB_WORKSPACE/SCCcredentials
-          echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials 
-          echo "passworx=" >> $GITHUB_WORKSPACE/SCCcredentials
-          # Create work container
-          buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
-          # Install packages (suseconnect)
-          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends suseconnect
+      #name: Create SCCcredentials
+      #  run: |
+      #    # Create an empty SCCcredentials
+      #    touch $GITHUB_WORKSPACE/SCCcredentials
+      #    echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials 
+      #    echo "passworx=" >> $GITHUB_WORKSPACE/SCCcredentials
+      #    # Create work container
+      #    buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
+      #    # Install packages (suseconnect)
+      #    buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends suseconnect
           
           
       
