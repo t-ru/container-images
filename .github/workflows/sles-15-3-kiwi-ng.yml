@@ -56,9 +56,30 @@ jobs:
           echo "username=${{ secrets.SCC_USERNAME }}" >> $GITHUB_WORKSPACE/SCCcredentials 
           echo "passworx=${{ secrets.SCC_PASSWORD }}" >> $GITHUB_WORKSPACE/SCCcredentials
       
-      - name: TEST
-        run: |
-          buildah  run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} cat /run/secrets/SCCcredentials
+      # Refresh repositories
+      - name: Refresh repositories
+        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper refresh
+      
+      # Install updates
+      - name: Install updates
+        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper update --no-confirm --no-recommends
+      
+     # Add KIWI NG repository
+     # - name: Add KIWI NG repository
+     #   run: |
+     #     buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper addrepo http://download.opensuse.org/repositories/Virtualization:/Appliances:/Builder/openSUSE_Tumbleweed appliance-builder
+     #     buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper --gpg-auto-import-keys refresh
+          
+      
+      # Install packages (python3-kiwi)
+      - name: Install packages (python3-kiwi)
+        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends python3-kiwi
+        
+        
+        
+      #- name: TEST
+      #  run: |
+      #    buildah  run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} cat /run/secrets/SCCcredentials
       
       
       # Install packages (hostname)
