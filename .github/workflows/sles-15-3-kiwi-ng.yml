@@ -8,8 +8,8 @@ on:
   #  - cron: '0 0 * * *'  # every day at midnight
 
 env:
-  BASE_IMAGE_NAME: "registry.suse.com/suse/sle15:15.3"
-  BASE_IMAGE_TAG: "latest"
+  BASE_IMAGE_NAME: "registry.suse.com/suse/sle15"
+  BASE_IMAGE_TAG: "15.3"
   TARGET_IMAGE_NAME: "sles-15-3-kiwi-ng"
   WORK_CONTAINER: "work-container"
   
