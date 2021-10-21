@@ -73,6 +73,10 @@ jobs:
       # Install packages (python3-kiwi)
       - name: Install packages (python3-kiwi)
         run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends python3-kiwi
+      
+      # Install packages (kiwi-systemdeps)
+      - name: Install packages (kiwi-systemdeps)
+        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends kiwi-systemdeps
         
         
         
