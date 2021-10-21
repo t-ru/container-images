@@ -12,6 +12,7 @@ env:
   BASE_IMAGE_TAG: "15.3"
   TARGET_IMAGE_NAME: "sles-15-3-kiwi-ng"
   WORK_CONTAINER: "work-container"
+  HELPER_CONTAINER: "helper-container"
   
 jobs:
 
@@ -36,27 +37,37 @@ jobs:
       # Show images
       - name: Show images
         run: buildah images
-        
-      # Create SCC credentials
-      - name: Create SCC credentials
+      
+      # Helper container - Create
+      - name: Helper container - Create
+        run: buildah from --name "${{ env.HELPER_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
+      
+      # Helper container - Install packages (SUSEConnect)
+      - name: Helper container - Install packages (SUSEConnect)
+        run: buildah run ${{ env.HELPER_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
+      
+      # Helper container - SCC Registration
+      - name: Helper container - SCC Registration
+        run: buildah run ${{ env.HELPER_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
+      
+      # Helper container - Copy SCC credentials to build host
+      - name: Helper container - Copy SCC credentials to build host
         run: |
-          # Create work container
-          buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
-          # Install packages (SUSEConnect)
-          buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
-          # Register
-          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
-          # Copy SCCcredentials from work container to build host
           mkdir $GITHUB_WORKSPACE/scc-creds
-          buildah run -v $GITHUB_WORKSPACE/scc-creds:/scc-creds ${{ env.WORK_CONTAINER }} cp "/etc/zypp/credentials.d/SCCcredentials" "/scc-creds"
+          buildah run -v $GITHUB_WORKSPACE/scc-creds:/scc-creds ${{ env.HELPER_CONTAINER }} cp "/etc/zypp/credentials.d/SCCcredentials" "/scc-creds"
           mv $GITHUB_WORKSPACE/scc-creds/SCCcredentials $GITHUB_WORKSPACE
           rm -rf $GITHUB_WORKSPACE/scc-creds
-          # Unregister
-          #buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
-          # Cleanup
-          #buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
-          # Remove work container
-          buildah rm ${{ env.WORK_CONTAINER }}
+      
+      
+      
+      # Helper container - SCC Deregistration
+      - name: Helper container - SCC Deregistration
+        run: buildah run ${{ env.HELPER_CONTAINER }} SUSEConnect --de-register
+      
+      # Helper container - Remove
+      - name: Helper container - Remove
+        run: buildah rm ${{ env.HELPER_CONTAINER }}
+      
       
       # Show SCC credentials
       - name: Show SCC credentials
