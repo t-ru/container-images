@@ -62,6 +62,26 @@ jobs:
       - name: Show SCC credentials
         run: cat $GITHUB_WORKSPACE/SCCcredentials
         
+      # Create work container
+      - name: Create work container
+        run: buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
+      
+      # Add additional modules
+      - name: Add additional modules
+        run: buildah config --env "ADDITIONAL_MODULES=PackageHub" ${{ env.WORK_CONTAINER }}
+      
+      # Add KIWI NG repository
+      - name: Add KIWI NG repository
+        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper addrepo http://download.opensuse.org/repositories/Virtualization:/Appliances:/Builder/SLE_15_SP3 appliance-builder
+      
+      # Refresh repositories
+      - name: Refresh repositories
+        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper --gpg-auto-import-keys refresh
+      
+      
+        
+        
+        
           
           
           
