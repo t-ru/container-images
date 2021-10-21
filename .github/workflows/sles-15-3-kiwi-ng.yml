@@ -44,17 +44,18 @@ jobs:
           touch $GITHUB_WORKSPACE/SCCcredentials.tmp-1
           echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
           echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
-          # Creaate SCCcredentials.tmp-2
           touch $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
           # Create work container
           buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
           # Install packages (SUSEConnect)
           buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-1,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
           # Register
-          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
-          # Copy $GITHUB_WORKSPACE/SCCcredentials.tmp-2 to $GITHUB_WORKSPACE/SCCcredentials
-          #cp $GITHUB_WORKSPACE/SCCcredentials.tmp-2 $GITHUB_WORKSPACE/SCCcredentials
-          #cat $GITHUB_WORKSPACE/SCCcredentials
+          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/tmp/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
+          # Copy SCCcredentials
+          cat /etc/zypp/credentials.d/SCCcredentials > /tmp/SCCcredentials
+          cat /tmp/SCCcredentials
           # Unregister
           #buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
           # Cleanup
