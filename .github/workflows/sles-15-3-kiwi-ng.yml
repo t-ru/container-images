@@ -40,10 +40,11 @@ jobs:
       # Create SCCcredentials
       - name: Create SCCcredentials
         run: |
-          # Create an SCCcredentials.tmp-1 and SCCcredentials.tmp-2
+          # Create an SCCcredentials.tmp-1
           touch $GITHUB_WORKSPACE/SCCcredentials.tmp-1
           echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
           echo "passworx=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
+          # Create an SCCcredentials.tmp-2
           touch $GITHUB_WORKSPACE/SCCcredentials.tmp-2
           echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
           echo "passworx=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
