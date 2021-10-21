@@ -52,9 +52,9 @@ jobs:
           mv $GITHUB_WORKSPACE/scc-creds/SCCcredentials $GITHUB_WORKSPACE
           rm -rf $GITHUB_WORKSPACE/scc-creds
           # Unregister
-          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
+          #buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
           # Cleanup
-          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
+          #buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
           # Remove work container
           buildah rm ${{ env.WORK_CONTAINER }}
       
