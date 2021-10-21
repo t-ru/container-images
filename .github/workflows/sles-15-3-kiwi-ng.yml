@@ -46,8 +46,6 @@ jobs:
           echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
           # Creaate SCCcredentials.tmp-2
           touch $GITHUB_WORKSPACE/SCCcredentials.tmp-2
-          echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
-          echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
           # Create work container
           buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
           # Install packages (SUSEConnect)
