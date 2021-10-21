@@ -49,19 +49,13 @@ jobs:
       - name: Inspect base image
         run: buildah inspect --type image ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
         
-      # TEST
+      # Create
       - name: TEST
         run: |
-          pwd
-          echo "$GITHUB_WORKSPACE"
-          ls $GITHUB_WORKSPACE
           touch $GITHUB_WORKSPACE/SCCcredentials
-          echo "username=${{ secrets.SCC_USERNAME }}" >> $GITHUB_WORKSPACE/SCCcredentials
+          echo "username=${{ secrets.SCC_USERNAME }}" >> $GITHUB_WORKSPACE/SCCcredentials 
           echo "passworx=${{ secrets.SCC_PASSWORD }}" >> $GITHUB_WORKSPACE/SCCcredentials
-          cat $GITHUB_WORKSPACE/SCCcredentials
-      
-
-
+          
 
       # Create target image
       - name: Create target image
