@@ -40,39 +40,30 @@ jobs:
       # Create SCCcredentials
       - name: Create SCCcredentials
         run: |
-          touch $GITHUB_WORKSPACE/SCCcredentials
-          echo "username=${{ secrets.SCC_USERNAME }}" >> $GITHUB_WORKSPACE/SCCcredentials 
-          echo "password=${{ secrets.SCC_PASSWORD }}" >> $GITHUB_WORKSPACE/SCCcredentials
-      
-      # Refresh repositories
-      - name: Refresh repositories
-        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper --gpg-auto-import-keys refresh
-      
-      
-      
-        
-      # Create SCCcredentials
-      #- name: Create SCCcredentials
-      #  run: |
-      #    # Create SCCcredentials.tmp-1 and Creaate SCCcredentials.tmp-2
-      #    touch $GITHUB_WORKSPACE/SCCcredentials.tmp-1
-      #    echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
-      #    echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
-      #    # Creaate SCCcredentials.tmp-2
-      #    touch $GITHUB_WORKSPACE/SCCcredentials.tmp-2
-      #    echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
-      #    echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
-      #    # Create work container
-      #    buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
-      #    # Install packages (SUSEConnect)
-      #    buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-1,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
-      #    # Register
-      #    buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
-      #    # Copy $GITHUB_WORKSPACE/SCCcredentials.tmp-2 to $GITHUB_WORKSPACE/SCCcredentials
-      #    cp $GITHUB_WORKSPACE/SCCcredentials.tmp-2 $GITHUB_WORKSPACE/SCCcredentials
-      #    # Unregister
-      #    buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
-      #    # Cleanup
-      #    buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
-      #    # Remove SCCcredentials.tmp-1 and SCCcredentials.tmp-2 
+          # Create SCCcredentials.tmp-1 and Creaate SCCcredentials.tmp-2
+          touch $GITHUB_WORKSPACE/SCCcredentials.tmp-1
+          echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
+          echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-1
+          # Creaate SCCcredentials.tmp-2
+          touch $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          echo "username=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          echo "password=" >> $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          # Create work container
+          buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
+          # Install packages (SUSEConnect)
+          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-1,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
+          # Register
+          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
+          # Copy $GITHUB_WORKSPACE/SCCcredentials.tmp-2 to $GITHUB_WORKSPACE/SCCcredentials
+          cp $GITHUB_WORKSPACE/SCCcredentials.tmp-2 $GITHUB_WORKSPACE/SCCcredentials
+          # Unregister
+          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
+          # Cleanup
+          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
+          # Remove SCCcredentials.tmp-1 and SCCcredentials.tmp-2
+          rm $GITHUB_WORKSPACE/SCCcredentials.tmp-1
+          rm $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          cat $GITHUB_WORKSPACE/SCCcredentials
+          
+          
       
