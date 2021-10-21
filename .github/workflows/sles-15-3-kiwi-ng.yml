@@ -48,5 +48,6 @@ jobs:
           buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
           # Install packages (SUSEConnect)
           buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
-        
-      
+          # Register at SUSE SCC
+          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE }} --email ${{ secrets.SCC_EMAIL }}
+          buildah run ${{ env.WORK_CONTAINER }} cat /etc/zypp/credentials.d/SCCcredentials          
