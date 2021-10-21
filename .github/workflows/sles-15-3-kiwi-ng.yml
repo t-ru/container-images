@@ -56,8 +56,8 @@ jobs:
           echo "$GITHUB_WORKSPACE"
           ls $GITHUB_WORKSPACE
           touch $GITHUB_WORKSPACE/SCCcredentials
-          echo "username=xxx" >> $GITHUB_WORKSPACE/SCCcredentials
-          echo "password=yyy" >> $GITHUB_WORKSPACE/SCCcredentials
+          echo "username=${{ secrets.SCC_USERNAME }}" >> $GITHUB_WORKSPACE/SCCcredentials
+          echo "passworx=${{ secrets.SCC_PASSWORD }}" >> $GITHUB_WORKSPACE/SCCcredentials
           cat $GITHUB_WORKSPACE/SCCcredentials
       
 
