@@ -48,8 +48,13 @@ jobs:
       # Inspect base image
       - name: Inspect base image
         run: buildah inspect --type image ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
-
-
+        
+      # TEST
+      - name: TEST
+        run: |
+          pwd
+          echo "$GITHUB_WORKSPACE"
+          ls $GITHUB_WORKSPACE
 
 
 
