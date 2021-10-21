@@ -47,8 +47,13 @@ jobs:
           # Create work container
           buildah from --name "${{ env.WORK_CONTAINER }}" ${{ env.BASE_IMAGE_NAME }}:${{ env.BASE_IMAGE_TAG }}
           
-          buildah unshare
+          buildah unshare ${{ env.WORK_CONTAINER }}
           buildah mount ${{ env.WORK_CONTAINER }}
+          buildah umount ${{ env.WORK_CONTAINER }}
+          
+          #echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
+          
+          
           
           # Install packages (SUSEConnect)
           #buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
