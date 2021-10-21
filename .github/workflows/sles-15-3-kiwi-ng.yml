@@ -53,6 +53,18 @@ jobs:
           rm -rf $GITHUB_WORKSPACE/scc-creds
           ls $GITHUB_WORKSPACE/SCCcredentials
           cat $GITHUB_WORKSPACE/SCCcredentials
+          # Unregister
+          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
+          # Cleanup
+          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
+          # Remove work container
+          buildah rm ${{ env.WORK_CONTAINER }}
+      
+      # Show SCCcredentials
+      - name: Create SCCcredentials
+        run: cat $GITHUB_WORKSPACE/SCCcredentials
+        
+          
           
           
           
