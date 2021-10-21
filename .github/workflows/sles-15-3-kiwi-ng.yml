@@ -51,8 +51,6 @@ jobs:
           buildah run -v $GITHUB_WORKSPACE/scc-creds:/scc-creds ${{ env.WORK_CONTAINER }} cp "/etc/zypp/credentials.d/SCCcredentials" "/scc-creds"
           mv $GITHUB_WORKSPACE/scc-creds/SCCcredentials $GITHUB_WORKSPACE
           rm -rf $GITHUB_WORKSPACE/scc-creds
-          ls $GITHUB_WORKSPACE/SCCcredentials
-          cat $GITHUB_WORKSPACE/SCCcredentials
           # Unregister
           buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
           # Cleanup
