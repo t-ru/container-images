@@ -55,6 +55,8 @@ jobs:
           buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
           # Copy SCCcredentials
           buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/tmp/SCCcredentials ${{ env.WORK_CONTAINER }} cat /etc/zypp/credentials.d/SCCcredentials > /tmp/SCCcredentials
+          cat $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          
           # Unregister
           #buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
           # Cleanup
