@@ -78,13 +78,13 @@ jobs:
       - name: Work container - Install updates
         run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper update --no-confirm --no-recommends
         
-      # Work container - Install packages (hostname)
-      - name: Work container - Install packages (hostname)
-        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
+      ## Work container - Install packages (hostname)
+      #- name: Work container - Install packages (hostname)
+      #  run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends hostname
 
-      # Work container - Install packages (util-linux)
-      - name: Work container - Install packages (util-linux)
-        run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
+      ## Work container - Install packages (util-linux)
+      #- name: Work container - Install packages (util-linux)
+      #  run: buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends util-linux
       
       # Work container - Install packages (python3-kiwi)
       - name: Work container - Install packages (python3-kiwi)
@@ -101,13 +101,7 @@ jobs:
       # Helper container - Remove
       - name: Helper container - Remove
         run: buildah rm ${{ env.HELPER_CONTAINER }}
-      
-      
-      
-      
-      
-      
-      
+            
       # Create target image
       - name: Create target image
         run: buildah commit --format docker --squash ${{ env.WORK_CONTAINER }} ${{ env.TARGET_IMAGE_NAME }}:${{ github.sha }}
