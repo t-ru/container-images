@@ -51,6 +51,11 @@ jobs:
           # Register at SUSE SCC
           buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
           # copy
-          buildah copy --from ${{ env.WORK_CONTAINER }} "/etc/zypp/credentials.d/SCCcredentials" "$GITHUB_WORKSPACE/SCCcredentials"
-          cat $GITHUB_WORKSPACE/SCCcredentials
+          mnt=$(buildah mount "${{ env.WORK_CONTAINER }}")
+          ls $mnt
+          # cp $mnt/PATHTOSRC /PATHTODEST
+          buildah umount ${{ env.WORK_CONTAINER }}
+
+          #buildah copy --from ${{ env.WORK_CONTAINER }} "/etc/zypp/credentials.d/SCCcredentials" "$GITHUB_WORKSPACE/SCCcredentials"
+          #cat $GITHUB_WORKSPACE/SCCcredentials
            
