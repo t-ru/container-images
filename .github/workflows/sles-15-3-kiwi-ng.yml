@@ -51,15 +51,15 @@ jobs:
           # Install packages (SUSEConnect)
           buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-1,dst=/run/secrets/SCCcredentials ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends SUSEConnect
           # Register
-          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
+          buildah run ${{ env.WORK_CONTAINER }} SUSEConnect --regcode ${{ secrets.SCC_REGCODE_SLES }} --email ${{ secrets.SCC_EMAIL }}
           # Copy $GITHUB_WORKSPACE/SCCcredentials.tmp-2 to $GITHUB_WORKSPACE/SCCcredentials
-          cp $GITHUB_WORKSPACE/SCCcredentials.tmp-2 $GITHUB_WORKSPACE/SCCcredentials
-          cat $GITHUB_WORKSPACE/SCCcredentials
+          #cp $GITHUB_WORKSPACE/SCCcredentials.tmp-2 $GITHUB_WORKSPACE/SCCcredentials
+          #cat $GITHUB_WORKSPACE/SCCcredentials
           # Unregister
-          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
+          #buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --de-register
           # Cleanup
-          buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
+          #buildah run --mount=type=bind,src=$GITHUB_WORKSPACE/SCCcredentials.tmp-2,dst=/etc/zypp/credentials.d/SCCcredentials ${{ env.WORK_CONTAINER }} SUSEConnect --cleanup
           # Remove SCCcredentials.tmp-1 and SCCcredentials.tmp-2
-          rm $GITHUB_WORKSPACE/SCCcredentials.tmp-1
-          rm $GITHUB_WORKSPACE/SCCcredentials.tmp-2
+          #rm $GITHUB_WORKSPACE/SCCcredentials.tmp-1
+          #rm $GITHUB_WORKSPACE/SCCcredentials.tmp-2
           
