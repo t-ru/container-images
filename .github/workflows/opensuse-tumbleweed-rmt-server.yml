@@ -86,8 +86,12 @@ jobs:
         run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends nginx
       
       # Install packages (ruby2.7)
-      - name: Install packages (ruby2.7)
-        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
+      #- name: Install packages (ruby2.7)
+      #  run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby2.7 ruby2.7-rubygem-gem2rpm ruby2.7-rubygem-bundler
+
+      # Install packages (ruby3.1)
+      - name: Install packages (ruby3.1)
+        run: buildah run ${{ env.WORK_CONTAINER }} zypper install --no-confirm --no-recommends ruby3.1 ruby3.1-rubygem-gem2rpm ruby3.1-rubygem-bundler
 
       # Install gems (bundler:1.17.3)
       #   rmt-server requires bundler:1.17.3
